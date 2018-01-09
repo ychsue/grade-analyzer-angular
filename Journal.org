@@ -1,0 +1,4 @@
+
+* [2018-01-09 Tue] Install *@angular/cli*, *yo* and *@types/office-js*
+  1. Following the tutorial shown in [[https://docs.microsoft.com/en-us/office/dev/add-ins/quickstarts/excel-quickstart-angular][Quick Start]], [[https://docs.microsoft.com/en-us/office/dev/add-ins/develop/add-ins-with-angular2][Develop Add-in]] and [[https://docs.microsoft.com/en-us/office/dev/add-ins/testing/create-a-network-shared-folder-catalog-for-task-pane-and-content-add-ins][How to sideload]]. Be careful, ~</br>~ will cause an error. It should be ~<br/>~.
+  2. Well, to avoid =git= transfering =LF= to be =CRLF= which can be easily set in =VSCode=, you can fix it by adding =[core] autocrlf=false= into file /.git\/config/ to turn off this functionality. It was discussed in [[https://stackoverflow.com/questions/1967370/git-replacing-lf-with-crlf][this StackOverflow post]].

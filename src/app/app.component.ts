@@ -1,4 +1,8 @@
+/// <reference path="../../node_modules/@types/office-js/index.d.ts" />
+
 import { Component } from '@angular/core';
+
+//declare const Excel: any;
 
 @Component({
   selector: 'app-root',
@@ -6,5 +10,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app';
+onSetColor(){
+  Excel.run(async (ctx)=>{
+    const range = ctx.workbook.getSelectedRange();
+    range.format.fill.color = 'green';
+    await ctx.sync();
+  });
+}
 }
