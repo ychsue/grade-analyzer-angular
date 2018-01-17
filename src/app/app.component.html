@@ -1,14 +1,15 @@
 <div id="content-header">
   <div class="padding">
-    <h1>Welcome</h1>
+    <h1>Welcome to this code</h1>
   </div>
 </div>
 
 <div id="content-main">
-  <div class="padding">
-    <p>Choose the button below to set the color of the selected range to green.</p>
-  <br/>
-  <h3>Try it out</h3>
-  <button (click)="onSetColor()">Set color</button>
+  <router-outlet></router-outlet>
 </div>
+<div>
+<nav id="navAll">
+  <a routerLink="/test">Test</a>
+  <a routerLink="/welcome">Welcome</a>
+</nav>
 </div>

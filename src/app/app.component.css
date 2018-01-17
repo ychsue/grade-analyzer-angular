@@ -22,3 +22,8 @@
 .padding {
     padding: 15px;
 }
+
+#navAll {
+    position: absolute;
+    bottom: 0;
+}
