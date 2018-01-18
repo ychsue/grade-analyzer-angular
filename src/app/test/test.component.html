@@ -1,3 +1,16 @@
+<div>
+  <button (click)="createTable()">Create Table</button>
+</div>
+<div>
+  <button (click)="filterTable()">Filter Table</button>
+  <button (click)="sortTable()">Sort Table</button>
+</div>
+<div>
+  <button (click)="createChart()">Create a Chart</button>
+</div>
+<div>
+  <button (click)="freezeHeader()">Freeze the header</button>
+</div>
 <ul>
   <li *ngFor="let message of messageService.messages">
     {{message}}
