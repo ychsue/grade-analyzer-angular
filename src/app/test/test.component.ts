@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from '../message.service';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+import { DataServerService } from '../data-server.service';
 
 @Component({
   selector: 'app-test',
@@ -147,7 +148,21 @@ freezeHeader():void{
   );
 }
 
-constructor(public messageService: MessageService) { }
+getWorksheetNames(){
+  this.dataServerService.getWorksheetNames().then( ()=>
+    this.dataServerService.worksheetNames.forEach(wsName => this.messageService.add("Worksheet Name: "+wsName))
+  );
+}
+
+isSet(){
+  this.dataServerService.isSet();
+}
+
+showWindowConfirm(message: string){
+  window.confirm(message || 'Is it OK?');
+}
+
+constructor(public messageService: MessageService, private dataServerService:DataServerService) { }
 
 ngOnInit() {
   this.messageService.add("TestComponent.ngOnInit");

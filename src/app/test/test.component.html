@@ -11,6 +11,15 @@
 <div>
   <button (click)="freezeHeader()">Freeze the header</button>
 </div>
+<div>
+  <button (click)="getWorksheetNames()">Get worksheet names</button>
+</div>
+<div>
+  <button (click)="isSet()">Is Set?</button>
+</div>
+<div>
+  <button (click)="showWindowConfirm()">[window.confirm Does not work]</button>
+</div>
 <ul>
   <li *ngFor="let message of messageService.messages">
     {{message}}

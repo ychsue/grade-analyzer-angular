@@ -3,23 +3,26 @@ import { NgModule } from '@angular/core';
 
 
 import { AppComponent } from './app.component';
-import { AddRoutingModule } from './add-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { TestComponent } from './test/test.component';
 import { MessageService } from './message.service';
+import { DataServerService } from './data-server.service';
+import { SettingsComponent } from './settings/settings.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     WelcomeComponent,
-    TestComponent
+    TestComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
-    AddRoutingModule
+    AppRoutingModule
   ],
-  providers: [MessageService],
+  providers: [MessageService, DataServerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
