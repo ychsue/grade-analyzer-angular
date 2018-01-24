@@ -181,7 +181,7 @@ showSpinner(){
 showDialog(){
   let dialogRef = this.appComponent.dialog.open(
     DialogComponent,
-    {width:'180px', height:'180px'}
+    {}
   );
   dialogRef.afterClosed().subscribe(result =>{
     this.messageService.add('The dialog was closed'+result);

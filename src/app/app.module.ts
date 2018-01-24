@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { MatProgressSpinnerModule, MatDialogModule } from "@angular/material";
+import { MatProgressSpinnerModule, MatDialogModule, MatButtonModule } from "@angular/material";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { AppComponent } from './app.component';
@@ -28,8 +28,10 @@ import { SpinnerComponent } from './spinner/spinner.component';
     AppRoutingModule,
     MatProgressSpinnerModule,
     MatDialogModule,
+    MatButtonModule,
     BrowserAnimationsModule
   ],
+  entryComponents:[AppComponent,DialogComponent],
   providers: [MessageService, DataServerService],
   bootstrap: [AppComponent]
 })
