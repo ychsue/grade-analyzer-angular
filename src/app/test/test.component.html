@@ -20,6 +20,11 @@
 <div>
   <button (click)="showWindowConfirm()">[window.confirm Does not work]</button>
 </div>
+<div>
+  <button (click)="changeAppTitle()">Change title</button>
+  <button (click)="showSpinner()">show Spinner 3 sec</button>
+  <button (click)="showDialog()">Show Dialog</button>
+</div>
 <ul>
   <li *ngFor="let message of messageService.messages">
     {{message}}

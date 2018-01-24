@@ -1,6 +1,6 @@
 <div id="content-header">
   <div class="padding">
-    <h1>Welcome to this code</h1>
+    <h1>{{title}}</h1>
   </div>
 </div>
 
@@ -8,9 +8,13 @@
   <router-outlet></router-outlet>
 </div>
 <div>
-<nav id="navAll">
-  <a routerLink="/test">Test</a>
-  <a routerLink="/welcome">Welcome</a>
-  <a routerLink="/settings">Settings</a>
-</nav>
+  <nav id="navAll">
+    <a routerLink="/test">Test</a>
+    <a routerLink="/welcome">Welcome</a>
+    <a routerLink="/settings">Settings</a>
+  </nav>
 </div>
+<app-spinner 
+  *ngIf="this.setOfSpinner.isActivate"
+  [title]="this.setOfSpinner.title"
+  [message]="this.setOfSpinner.message"></app-spinner>

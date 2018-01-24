@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { MessageService } from '../message.service';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { DataServerService } from '../data-server.service';
+import { AppComponent } from '../app.component';
+import { DialogComponent } from '../dialog/dialog.component';
+
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
 @Component({
   selector: 'app-test',
@@ -162,7 +166,30 @@ showWindowConfirm(message: string){
   window.confirm(message || 'Is it OK?');
 }
 
-constructor(public messageService: MessageService, private dataServerService:DataServerService) { }
+changeAppTitle(){
+  this.appComponent.title = Date();
+}
+
+showSpinner(){
+  let setOfSpinner = this.appComponent.setOfSpinner;
+    setOfSpinner.isActivate = true;
+    setOfSpinner.title = "測試";
+    setOfSpinner.message = Date();
+    setTimeout(()=>setOfSpinner.isActivate=false,3000);
+}
+
+showDialog(){
+  let dialogRef = this.appComponent.dialog.open(
+    DialogComponent,
+    {width:'180px', height:'180px'}
+  );
+  dialogRef.afterClosed().subscribe(result =>{
+    this.messageService.add('The dialog was closed'+result);
+  });
+}
+
+constructor(public messageService: MessageService, private dataServerService:DataServerService,
+private appComponent:AppComponent) { }
 
 ngOnInit() {
   this.messageService.add("TestComponent.ngOnInit");
