@@ -1,4 +1,30 @@
-<table>
+<form>
+  <div id="div-tmp-name">
+      <h3>樣板表單名稱：</h3>
+      <button mat-raised-button>產生表單？</button>
+  </div>
+  <mat-form-field>
+    <input matInput placeholder="樣板表單名稱：" [value]="this.gSettings.templateWorksheetName"/>
+  </mat-form-field>
+  <h3>樣板表單中特殊欄位名稱：</h3>
+  <mat-form-field>
+    <input matInput placeholder="ID：" [value]="this.gSettings.stID"/>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Name：" [value]="this.gSettings.stName"/>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Total：" [value]="this.gSettings.stTotal"/>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Average：" [value]="this.gSettings.stAvg"/>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Score：" [value]="this.gSettings.stScore"/>
+  </mat-form-field>
+</form>
+
+<!-- <table>
   <tr>
     <td>樣板表單名稱：</td>
     <td>
@@ -33,4 +59,4 @@
     <td><input type="text" [value]="gSettings.stScore"/></td>
   </tr>
   
-</table>
+</table> -->

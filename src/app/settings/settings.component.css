@@ -1,0 +1,9 @@
+form {
+    margin: 0 5%;
+}
+mat-form-field{
+    width: 100%;
+}
+#div-tmp-name{
+    display: flex;
+}

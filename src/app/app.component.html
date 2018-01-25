@@ -1,20 +1,23 @@
-<div id="content-header">
-  <div class="padding">
-    <h1>{{title}}</h1>
-  </div>
+<div id="app-component-container">
+  <mat-toolbar id="menu-bar" color="primary">
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+        <a mat-menu-item routerLink="/test">Test</a>
+        <a mat-menu-item routerLink="/welcome">Welcome</a>
+        <a mat-menu-item routerLink="/settings">Settings</a>
+    </mat-menu>
+    <span>{{title}}</span>
+  </mat-toolbar>
+  
+  <div id="content-main">
+    <router-outlet></router-outlet>
+  </div>  
 </div>
 
-<div id="content-main">
-  <router-outlet></router-outlet>
-</div>
-<div>
-  <nav id="navAll">
-    <a routerLink="/test">Test</a>
-    <a routerLink="/welcome">Welcome</a>
-    <a routerLink="/settings">Settings</a>
-  </nav>
-</div>
 <app-spinner 
   *ngIf="this.setOfSpinner.isActivate"
   [title]="this.setOfSpinner.title"
-  [message]="this.setOfSpinner.message"></app-spinner>
+  [message]="this.setOfSpinner.message">
+</app-spinner>
