@@ -3,7 +3,7 @@ import { MessageService } from '../message.service';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { DataServerService } from '../data-server.service';
 import { AppComponent } from '../app.component';
-import { DialogComponent } from '../dialog/dialog.component';
+import { DialogComponent, dialogData } from '../dialog/dialog.component';
 
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
@@ -74,10 +74,10 @@ filterTable():void{
 })
 }
 /**
- * Used to sort the exist table, Gotten from
- * https://docs.microsoft.com/en-us/office/dev/add-ins/tutorials/excel-tutorial-filter-and-sort-table
- * @returns void
- */
+* Used to sort the exist table, Gotten from
+* https://docs.microsoft.com/en-us/office/dev/add-ins/tutorials/excel-tutorial-filter-and-sort-table
+* @returns void
+*/
 sortTable():void{
   Excel.run( 
     ctx =>{
@@ -93,15 +93,15 @@ sortTable():void{
     err =>{
       this.messageService.add("sortTable Error: "+err);
       if(err instanceof OfficeExtension.Error)
-        this.messageService.add("Debug info: "+JSON.stringify(err.debugInfo));
+      this.messageService.add("Debug info: "+JSON.stringify(err.debugInfo));
     }
   ); 
 }
 /**
- * Create a chart. Gotten from 
- * https://docs.microsoft.com/en-us/office/dev/add-ins/tutorials/excel-tutorial-create-chart
- * @returns void
- */
+* Create a chart. Gotten from 
+* https://docs.microsoft.com/en-us/office/dev/add-ins/tutorials/excel-tutorial-create-chart
+* @returns void
+*/
 createChart():void{
   Excel.run(
     ctx  => {
@@ -124,15 +124,15 @@ createChart():void{
     err =>{
       this.messageService.add("createChart Error: "+err);
       if(err instanceof OfficeExtension.Error)
-        this.messageService.add("Debug Info: "+JSON.stringify(err.debugInfo));
+      this.messageService.add("Debug Info: "+JSON.stringify(err.debugInfo));
     }
   )
 }
 /**
- * Freeze the header. Gotten from
- * https://docs.microsoft.com/en-us/office/dev/add-ins/tutorials/excel-tutorial-freeze-header
- * @returns void
- */
+* Freeze the header. Gotten from
+* https://docs.microsoft.com/en-us/office/dev/add-ins/tutorials/excel-tutorial-freeze-header
+* @returns void
+*/
 freezeHeader():void{
   Excel.run(
     ctx=>{
@@ -147,15 +147,15 @@ freezeHeader():void{
     err =>{
       this.messageService.add("freezeHeader Error: "+err);
       if(err instanceof OfficeExtension.Error)
-        this.messageService.add("Debug Info: "+err.debugInfo);
+      this.messageService.add("Debug Info: "+err.debugInfo);
     }
   );
 }
 
 getWorksheetNames(){
   this.dataServerService.getWorksheetNames().then( ()=>
-    this.dataServerService.worksheetNames.forEach(wsName => this.messageService.add("Worksheet Name: "+wsName))
-  );
+  this.dataServerService.worksheetNames.forEach(wsName => this.messageService.add("Worksheet Name: "+wsName))
+);
 }
 
 isSet(){
@@ -172,16 +172,39 @@ changeAppTitle(){
 
 showSpinner(){
   let setOfSpinner = this.appComponent.setOfSpinner;
-    setOfSpinner.isActivate = true;
-    setOfSpinner.title = "測試";
-    setOfSpinner.message = Date();
-    setTimeout(()=>setOfSpinner.isActivate=false,3000);
+  setOfSpinner.isActivate = true;
+  setOfSpinner.title = "測試";
+  setOfSpinner.message = Date();
+  setTimeout(()=>setOfSpinner.isActivate=false,3000);
 }
 
 showDialog(){
+  let data: dialogData={
+    title: "Dialog",
+    message: "Dialog message",
+    buttons:[
+      {
+        text: "OK",
+        action: (ref) =>{
+          ref.close(true);
+          this.messageService.add(JSON.stringify(data));
+        }
+      },
+      {
+        text: "Close",
+        action: (ref) =>{
+          ref.close(false);
+          this.messageService.add(JSON.stringify(data));
+        }
+      }
+
+    ]
+  };
   let dialogRef = this.appComponent.dialog.open(
     DialogComponent,
-    {}
+    {
+      data: data
+    }
   );
   dialogRef.afterClosed().subscribe(result =>{
     this.messageService.add('The dialog was closed'+result);
@@ -189,10 +212,10 @@ showDialog(){
 }
 
 constructor(public messageService: MessageService, private dataServerService:DataServerService,
-private appComponent:AppComponent) { }
-
-ngOnInit() {
-  this.messageService.add("TestComponent.ngOnInit");
-}
-
+  private appComponent:AppComponent) { }
+  
+  ngOnInit() {
+    this.messageService.add("TestComponent.ngOnInit");
+  }
+  
 }
