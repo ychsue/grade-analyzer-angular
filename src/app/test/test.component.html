@@ -25,6 +25,9 @@
   <button (click)="showSpinner()">show Spinner 3 sec</button>
   <button (click)="showDialog()">Show Dialog</button>
 </div>
+<div>
+  <button (click)="setAndGetSettings()">Set and Get settings.</button>
+</div>
 <ul>
   <li *ngFor="let message of messageService.messages">
     {{message}}

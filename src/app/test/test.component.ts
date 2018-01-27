@@ -211,6 +211,12 @@ showDialog(){
   });
 }
 
+setAndGetSettings(){
+  Office.context.document.settings.set("abc",3);
+  let val = Office.context.document.settings.get("abc");
+  this.messageService.add("test.setAndGetSettings: "+val);
+}
+
 constructor(public messageService: MessageService, private dataServerService:DataServerService,
   private appComponent:AppComponent) { }
   

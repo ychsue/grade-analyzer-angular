@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { MessageService } from './message.service';
 import { GlobalSettings } from './global-settings';
 import { forEach } from '@angular/router/src/utils/collection';
+import { resolve } from 'q';
 
 @Injectable()
 export class DataServerService {
@@ -42,12 +43,30 @@ export class DataServerService {
     let oSettings = Office.context.document.settings;
     let keys = Object.keys(this.globalSettings);
     let result =oSettings.get(keys[0]);
-    if(!result)
+    if(result===null){
       this.messageService.add(`initializeSettingsAsync: ${keys[0]}: ${result}`);
-
+      result = false;
+    }else{
+      result = true;
+    }
     return result;
   }
 
+  getUsedTimes():number{
+    let times =0;
+    if(this.isSet()){
+      times = this.updateSettingsFromServer().usedTimes;
+    }else{
+      times = 0;
+    }
+    return times;
+  }
+
+  setUsedTimes(num: number): Promise<any>{
+    this.globalSettings.usedTimes = num;
+    return this.updateSettingsToServer();
+  }
+  
   /**
    * Update Global settings from Office.context.document.settings;
    * @returns GlobalSettings
@@ -68,15 +87,20 @@ export class DataServerService {
    * Update this.globalSettings to Office.context.document.settings;
    * @returns void
    */
-  updateSettingsToServer():void{
+  updateSettingsToServer():Promise<any>{
     let oSettings = Office.context.document.settings;
     for (const key in this.globalSettings) {
       if (this.globalSettings.hasOwnProperty(key)) {
         const element = this.globalSettings[key];
-        if(element)
+        if(element!=null){
           oSettings.set(key,element);
+          this.messageService.add("DataServerService.updateSettingsToServer:"+key+":"+element);
+        }
       }
     }
+    return new Promise(
+      (res,rej)=>{return oSettings.saveAsync(res);}
+    );
   }
   //#endregion   For Settings
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataServerService } from '../data-server.service';
 import { GlobalSettings } from '../global-settings';
+import { MessageService } from '../message.service';
 
 @Component({
   selector: 'app-settings',
@@ -15,9 +16,20 @@ export class SettingsComponent implements OnInit {
   //#endregion properties
 
 
-  constructor(private dataServerService:DataServerService) { }
+  constructor(
+    private dataServerService:DataServerService,
+    private messageService: MessageService
+  ) { }
 
   ngOnInit() {
+    let isSet = this.dataServerService.isSet();
+    if(isSet===false){
+      this.dataServerService.updateSettingsToServer()
+      .then(()=>{
+        //* TODO: Once the settings is updated, I can do something here.
+        this.messageService.add("SettingsComponent.ngOnInit.saveAsync: isSet="+this.dataServerService.isSet());
+      });
+    }
   }
 
 }
