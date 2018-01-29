@@ -11,6 +11,7 @@ import { dialogData, DialogComponent } from '../dialog/dialog.component';
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
+  isTempSheetExist = false;
 
   //#region   properties: 
   gSettings: GlobalSettings = this.dataServerService.globalSettings;
@@ -61,6 +62,10 @@ export class SettingsComponent implements OnInit {
       });
       this.messageService.add("SettingsComponent.ngOnInit.saveAsync: isSet="+this.dataServerService.isSet());
     }
+
+    //* [2018-01-29 17:56] Check whether the template worksheet does exist.
+    //* TODO::
+    this.dataServerService.checkWorksheetExistance(this.gSettings.templateWorksheetName).then(iB => this.isTempSheetExist = iB);
   }
 
 }

@@ -28,6 +28,9 @@
 <div>
   <button (click)="setAndGetSettings()">Set and Get settings.</button>
 </div>
+<div>
+  <button (click)="checkExistanceOfTempSheet()">Check Template sheet</button>
+</div>
 <ul>
   <li *ngFor="let message of messageService.messages">
     {{message}}

@@ -1,7 +1,9 @@
 <form>
   <div id="div-tmp-name">
       <h3>樣板表單名稱：</h3>
-      <button mat-raised-button (click)="showDialog0()">➕產生表單？</button>
+      <button mat-raised-button
+       *ngIf="isTempSheetExist==false"
+       (click)="showDialog0()">➕產生表單？</button>
   </div>
   <mat-form-field>
     <input matInput placeholder="樣板表單名稱：" [value]="this.gSettings.templateWorksheetName"/>

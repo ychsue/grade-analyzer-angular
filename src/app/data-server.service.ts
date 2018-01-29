@@ -6,7 +6,7 @@ import { resolve } from 'q';
 
 @Injectable()
 export class DataServerService {
-  
+  //#region   WorkSheetNames
   worksheetNames:string[]=[];
   
   /**
@@ -32,6 +32,28 @@ export class DataServerService {
       }
     );
   }
+
+  checkWorksheetExistance(stSheetName: string):OfficeExtension.IPromise<boolean>{
+    return Excel.run(
+      async ctx =>{
+        let witem = ctx.workbook.worksheets.getItem(stSheetName);
+        await ctx.sync(false); //You need to synchronize witem before you use it.
+
+        let isExist = (witem=={})?false:true;    
+        this.messageService.add("dataServerService.checkWorksheetExistance: "+isExist);
+        this.messageService.add(`witem:${stSheetName}`+JSON.stringify(witem));
+        return ctx.sync(isExist);
+      }
+    ).catch(
+      err =>{
+        this.messageService.add("checkWorksheetExistance Error: "+err);
+        if(err instanceof OfficeExtension.Error)
+        this.messageService.add("Debug Info: "+err.debugInfo);
+        return false;
+      }
+    );
+  }
+  //#endregion   WorkSheetNames
 
   //#region   For Settings
   globalSettings: GlobalSettings = new GlobalSettings();

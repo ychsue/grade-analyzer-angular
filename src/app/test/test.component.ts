@@ -217,6 +217,19 @@ setAndGetSettings(){
   this.messageService.add("test.setAndGetSettings: "+val);
 }
 
+checkExistanceOfTempSheet(){
+  this.messageService.add("Check Existance: ");
+  this.dataServerService.checkWorksheetExistance(
+    this.dataServerService.globalSettings.templateWorksheetName
+  ).then(
+    (isExist)=>{
+      this.messageService.add("Existance: "+isExist);
+    }
+  ).catch(
+    (err)=> this.messageService.add("Error Existance: "+err)
+  );
+}
+
 constructor(public messageService: MessageService, private dataServerService:DataServerService,
   private appComponent:AppComponent) { }
   
