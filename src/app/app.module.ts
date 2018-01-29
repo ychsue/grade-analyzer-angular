@@ -12,6 +12,7 @@ import { DataServerService } from './data-server.service';
 import { SettingsComponent } from './settings/settings.component';
 import { DialogComponent } from './dialog/dialog.component';
 import { SpinnerComponent } from './spinner/spinner.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { SpinnerComponent } from './spinner/spinner.component';
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     AppRoutingModule,
     MatProgressSpinnerModule,
     MatDialogModule,
