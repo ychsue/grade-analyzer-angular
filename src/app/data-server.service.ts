@@ -42,7 +42,7 @@ export class DataServerService {
         let isExist = (witem=={})?false:true;    
         this.messageService.add("dataServerService.checkWorksheetExistance: "+isExist);
         this.messageService.add(`witem:${stSheetName}`+JSON.stringify(witem));
-        return ctx.sync(isExist);
+        return await ctx.sync(isExist);
       }
     ).catch(
       err =>{

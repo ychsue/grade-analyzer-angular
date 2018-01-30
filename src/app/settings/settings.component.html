@@ -6,7 +6,9 @@
        (click)="showDialog0()">➕產生表單？</button>
   </div>
   <mat-form-field>
-    <input matInput placeholder="樣板表單名稱：" [value]="this.gSettings.templateWorksheetName"/>
+    <input #inTmpName matInput placeholder="樣板表單名稱：" 
+      [value]="this.gSettings.templateWorksheetName"
+      (keyup)="onTempNameChanged(inTmpName.value)"/>
   </mat-form-field>
   <h3>樣板表單中特殊欄位名稱：</h3>
   <mat-form-field>

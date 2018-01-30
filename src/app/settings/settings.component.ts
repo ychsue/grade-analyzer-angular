@@ -4,6 +4,9 @@ import { GlobalSettings } from '../global-settings';
 import { MessageService } from '../message.service';
 import { AppComponent } from '../app.component';
 import { dialogData, DialogComponent } from '../dialog/dialog.component';
+import { Subject } from 'rxjs/Subject';
+import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-settings',
@@ -53,6 +56,22 @@ export class SettingsComponent implements OnInit {
     this.messageService.add("SettingsComponent.ngOnInit.saveAsync: appComponent.dialog="+this.appComponent.dialog);
   }
 
+  tmpStSubect = new Subject<string>();
+  initializeTmpStSubject():Observable<boolean>{
+    return this.tmpStSubect.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(async (term: string)=>{
+        this.gSettings.templateWorksheetName = term;
+        return await this.dataServerService.checkWorksheetExistance(term);
+      })
+    );
+  }
+  onTempNameChanged(term: string){
+    this.tmpStSubect.next(term);
+    this.messageService.add("onTmpNameChanged: "+term);
+  }
+
   ngOnInit() {
     let isSet = this.dataServerService.isSet();
     if(isSet===false){
@@ -63,6 +82,12 @@ export class SettingsComponent implements OnInit {
       this.messageService.add("SettingsComponent.ngOnInit.saveAsync: isSet="+this.dataServerService.isSet());
     }
 
+    //* [2018-01-30 14:38] initialize the RxJS.Subject for template worksheet's name
+    this.initializeTmpStSubject().subscribe(
+      isHere=>{
+        this.isTempSheetExist=isHere;
+        this.messageService.add("template input does exist: "+isHere);
+      });
     //* [2018-01-29 17:56] Check whether the template worksheet does exist.
     //* TODO::
     this.dataServerService.checkWorksheetExistance(this.gSettings.templateWorksheetName).then(iB => this.isTempSheetExist = iB);
