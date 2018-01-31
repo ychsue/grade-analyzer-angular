@@ -5,7 +5,7 @@ import { MessageService } from '../message.service';
 import { AppComponent } from '../app.component';
 import { dialogData, DialogComponent } from '../dialog/dialog.component';
 import { Subject } from 'rxjs/Subject';
-import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
@@ -16,80 +16,82 @@ import { Observable } from 'rxjs/Observable';
 export class SettingsComponent implements OnInit {
   isTempSheetExist = false;
 
-  //#region   properties: 
+  //#region   properties:
   gSettings: GlobalSettings = this.dataServerService.globalSettings;
   //#endregion properties
-
+  tmpStSubect = new Subject<string>();
 
   constructor(
-    private dataServerService:DataServerService,
+    private dataServerService: DataServerService,
     private messageService: MessageService,
     private appComponent: AppComponent
-  ) { }
+  ) {
 
-  refreshSettings(){
+   }
+
+  refreshSettings() {
+
     this.appComponent.setOfSpinner = {
-      isActivate: true, title:"更新中",message:""
+      isActivate: true, title: '更新中', message: ''
     };
-    //* [2018-01-29 11:33] Update it
+    // * [2018-01-29 11:33] Update it
     this.dataServerService.updateSettingsToServer()
     .then(
       () => this.appComponent.setOfSpinner = {
-        isActivate: false, title:"完成",message:""
-      }  
-    )
+        isActivate: false, title: '完成', message: ''
+      }
+    );
   }
 
-  showDialog0(){
-    let data: dialogData ={
-      title: "第一次使用",
+  showDialog0() {
+    const data: dialogData = {
+      title: '第一次使用',
       message: `由於Settings尚未有任何資料，我已自動幫你產生了一份。\n
       如不滿意，請依自己的需要修改，完畢後，請按最下面的更新鈕🔃即可更新。`,
       buttons: [
         {
-          text:"了解了",
-          action: (ref)=>ref.close()
+          text: '了解了',
+          action: (ref) => ref.close()
       }
       ]
     };
-    this.appComponent.dialog.open(DialogComponent,{data:data});
-    this.messageService.add("SettingsComponent.ngOnInit.saveAsync: appComponent.dialog="+this.appComponent.dialog);
+    this.appComponent.dialog.open(DialogComponent, {data: data});
+    this.messageService.add('SettingsComponent.ngOnInit.saveAsync: appComponent.dialog=' + this.appComponent.dialog);
   }
 
-  tmpStSubect = new Subject<string>();
-  initializeTmpStSubject():Observable<boolean>{
+  initializeTmpStSubject(): Observable<boolean> {
     return this.tmpStSubect.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap(async (term: string)=>{
+      switchMap(async (term: string) => {
         this.gSettings.templateWorksheetName = term;
         return await this.dataServerService.checkWorksheetExistance(term);
       })
     );
   }
-  onTempNameChanged(term: string){
+  onTempNameChanged(term: string) {
     this.tmpStSubect.next(term);
-    this.messageService.add("onTmpNameChanged: "+term);
+    this.messageService.add('onTmpNameChanged: ' + term);
   }
 
   ngOnInit() {
-    let isSet = this.dataServerService.isSet();
-    if(isSet===false){
+    const isSet = this.dataServerService.isSet();
+    if (isSet === false) {
       this.dataServerService.updateSettingsToServer()
-      .then(()=>{
-        setTimeout(()=> {this.showDialog0()},500);
+      .then(() => {
+        setTimeout(() => {this.showDialog0(); }, 500);
       });
-      this.messageService.add("SettingsComponent.ngOnInit.saveAsync: isSet="+this.dataServerService.isSet());
+      this.messageService.add('SettingsComponent.ngOnInit.saveAsync: isSet=' + this.dataServerService.isSet());
     }
 
-    //* [2018-01-30 14:38] initialize the RxJS.Subject for template worksheet's name
+    // * [2018-01-30 14:38] initialize the RxJS.Subject for template worksheet's name
     this.initializeTmpStSubject().subscribe(
-      isHere=>{
-        this.isTempSheetExist=isHere;
-        this.messageService.add("template input does exist: "+isHere);
+      isHere => {
+        this.isTempSheetExist = isHere;
+        this.messageService.add('template input does exist: ' + isHere);
       });
-    //* [2018-01-29 17:56] Check whether the template worksheet does exist.
-    //* TODO::
+    // * [2018-01-29 17:56] Check whether the template worksheet does exist.
+    // * TODO::
     this.dataServerService.checkWorksheetExistance(this.gSettings.templateWorksheetName).then(iB => this.isTempSheetExist = iB);
   }
 

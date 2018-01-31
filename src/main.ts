@@ -6,8 +6,6 @@ import 'hammerjs';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
-//declare const Office: any;
-
 if (environment.production) {
   enableProdMode();
 }
@@ -15,4 +13,7 @@ if (environment.production) {
 Office.initialize = () => {
   platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.log(err));
-}
+};
+
+if (Office['context'] === undefined || Office.context['document'] === undefined)
+  Office.initialize(null);

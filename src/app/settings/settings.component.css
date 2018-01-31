@@ -7,3 +7,24 @@ mat-form-field{
 #div-tmp-name{
     display: flex;
 }
+.headerTerms{
+    display: flex;
+}
+.block1, .block2{
+    box-sizing: content-box;
+    padding: 12px 4px;
+    margin: 2px;
+    border: 1px solid blue;
+    border-radius: 4px;
+}
+.block2{
+    width: 50%;
+}
+.block-head{
+    position: relative;
+    float: left;
+    top: -12px;
+    font-size: xx-small;
+    background: white;
+    color: blue;
+}
