@@ -230,6 +230,24 @@ checkExistanceOfTempSheet(){
   );
 }
 
+genTempIn(): void {
+  this.appComponent.setOfSpinner = {isActivate: true, title: '創建樣板中', message: '請稍候'};
+  this.dataServerService.createTempInSheet(this.dataServerService.globalSettings).then(
+   (iB) => {
+      this.messageService.add(`settingsComponent.genTempIn:after createTempInSheet`);
+      this.appComponent.setOfSpinner = {isActivate: false, title: '進行中', message: '請稍候'};
+      return iB;
+    }
+  );
+  
+  setTimeout(() => {
+    if(this.appComponent.setOfSpinner.isActivate===true)
+      this.appComponent.setOfSpinner = {isActivate: false, title: '進行中', message: '請稍候'};  
+  }, 10000);
+
+}
+
+
 constructor(public messageService: MessageService, private dataServerService:DataServerService,
   private appComponent:AppComponent) { }
   

@@ -59,6 +59,7 @@ export class SettingsComponent implements OnInit {
     this.messageService.add('SettingsComponent.ngOnInit.saveAsync: appComponent.dialog=' + this.appComponent.dialog);
   }
 
+  //#region  For automatically checking the existance of TempIn file
   initializeTmpStSubject(): Observable<boolean> {
     return this.tmpStSubect.pipe(
       debounceTime(300),
@@ -73,6 +74,27 @@ export class SettingsComponent implements OnInit {
     this.tmpStSubect.next(term);
     this.messageService.add('onTmpNameChanged: ' + term);
   }
+  //#endregion  For automatically checking the existance of TempIn file
+
+  genTempIn(): void {
+    this.appComponent.setOfSpinner = {isActivate: true, title: '創建樣板中', message: '請稍候'};
+    this.dataServerService.createTempInSheet(this.gSettings).then(
+     (iB) => {
+        this.messageService.add(`settingsComponent.genTempIn:after createTempInSheet`);
+        this.appComponent.setOfSpinner = {isActivate: false, title: '進行中', message: '請稍候'};
+        return iB;
+      }
+    );
+    
+    setTimeout( 
+      () => { 
+      if(this.appComponent.setOfSpinner.isActivate===true){
+        this.appComponent.setOfSpinner = {isActivate: false, title: '進行中', message: '請稍候'};
+      }}
+    ,10000);
+
+  }
+
 
   ngOnInit() {
     const isSet = this.dataServerService.isSet();

@@ -5,7 +5,7 @@ export class MessageService {
   messages:string[] =[];
 
   add(message: string):void{
-    this.messages.push(`[${Date()}] ${message}`);
+    this.messages.unshift(`[${Date()}] ${message}`);
   }
   clear():void{
     this.messages=[];

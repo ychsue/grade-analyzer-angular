@@ -13,6 +13,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { DialogComponent } from './dialog/dialog.component';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { FormsModule } from '@angular/forms';
+import { ExcelHelperModule } from './excel-helper/excel-helper.module';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { FormsModule } from '@angular/forms';
     MatMenuModule,
     MatIconModule,
     MatToolbarModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ExcelHelperModule
   ],
   entryComponents:[AppComponent,DialogComponent],
   providers: [MessageService, DataServerService],
