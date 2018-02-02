@@ -129,7 +129,7 @@ export class DataServerService {
   //#endregion   For Settings
   
   //#region   For Template input Worksheet
-  createTempInSheet(gSettings: GlobalSettings) : OfficeExtension.IPromise<boolean>{
+  createTempInSheet(gSettings: GlobalSettings, callback?: Function) : OfficeExtension.IPromise<boolean>{
     return Excel.run(
       async ctx => {
         const isSet = await this.checkWorksheetExistance(gSettings.templateWorksheetName).then((iB)=>iB);
@@ -171,9 +171,20 @@ export class DataServerService {
             [gSettings.stCLowest ,'','','','','','','','']]
           );
         }
-        return await ctx.sync(true).then(iB =>iB);
+        await ctx.sync();
+        if(callback)
+          callback();
+        await ctx.sync();
+        return true;
       }
-    )
+    ).catch(
+      err => {
+        this.messageService.add('createTempInSheet error: '+err);
+        if(err instanceof OfficeExtension.Error)
+          this.messageService.add('Debug Info: '+err.debugInfo);
+        return false;
+      }
+    );
     
   }
   //#endregion   For Template input Worksheet

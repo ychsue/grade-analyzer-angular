@@ -26,4 +26,18 @@ export class GlobalSettings {
         this.stCLowest =(gSettings)?gSettings.stCLowest:  "最低分";
         this.eachSheet =(gSettings)?gSettings.eachSheet:  "$YEAR$_$SEM$_$TIMES$";
     }
+
+    isTheSame(compared: GlobalSettings): boolean{
+        let iB = true;
+        for (const key in compared) {
+            if (compared.hasOwnProperty(key)) {
+                const val = compared[key];
+                if(this[key]!==val){
+                    iB = false;
+                    break;
+                }
+            }
+        }
+        return iB;
+    }
 }

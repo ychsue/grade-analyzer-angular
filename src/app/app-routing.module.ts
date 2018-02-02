@@ -4,11 +4,14 @@ import { AppComponent } from './app.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { TestComponent } from './test/test.component';
 import { SettingsComponent } from './settings/settings.component';
+import { CanDeactivateGuardService } from './can-deactivate-guard.service';
 
 const routes : Routes=[
   {path: 'welcome', component: WelcomeComponent},
   {path: 'test', component: TestComponent},
-  {path: 'settings', component: SettingsComponent},
+  {path: 'settings', 
+    component: SettingsComponent, 
+    canDeactivate:[CanDeactivateGuardService]},
   {path: '', redirectTo: '/welcome',pathMatch: 'full'}
 ];
 
@@ -18,6 +21,9 @@ const routes : Routes=[
   ],
   exports: [
     RouterModule
+  ],
+  providers: [
+    CanDeactivateGuardService
   ],
   declarations: []
 })
