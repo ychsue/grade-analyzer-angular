@@ -17,9 +17,10 @@ export class WelcomeComponent implements OnInit {
     private messageService: MessageService
   ) { }
 
-  ngOnInit() {
-    let isSet = this.dataServerService.isSet();
-    if(isSet === false){
+  async ngOnInit() {
+    const isSet = this.dataServerService.isSet();
+    const isExist = (isSet)?await this.dataServerService.checkWorksheetExistance(this.dataServerService.globalSettings.templateWorksheetName) : false;
+    if(isSet === false || isExist === false){
       this.messageService.add("WelcomeComponent.ngOnInit: "+isSet);
       this.router.navigate(['/settings']);
     }

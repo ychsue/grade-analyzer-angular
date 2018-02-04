@@ -3,7 +3,7 @@
       <h3>特殊表單名稱：</h3>
       <button mat-raised-button
        *ngIf="isTempSheetExist==false"
-       (click)="genTempIn()">➕產生表單？</button>
+       (click)="genTempIn()">{{btGenTmpText}}</button>
   </div>
   <mat-form-field>
     <input #inTmpName matInput placeholder="樣板表單名稱：" 

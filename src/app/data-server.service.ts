@@ -147,48 +147,49 @@ export class DataServerService {
           );
           table.name = 'grades';
           table.getHeaderRowRange()
-            .values =[[gSettings.stID,
-                       gSettings.stName,
-                       '英語',
-                       '國文',
-                       '數學',
-                       '自然',
-                       gSettings.stAvg,
-                       gSettings.stTotal,
-                       gSettings.stScore]];
-          // * [2018-02-01 15:19] Each student
-          table.rows.add(null /*add at the end*/,
-                     [[1,'name1','','','','','','',''],
-                      [2,'name2','','','','','','',''],
-                      [3,'name3','','','','','','',''],
-                      [4,'name4','','','','','','',''],
-                      [5,'name5','','','','','','',''],
-                     ]);
-          // * [2018-02-01 15:51] Add the bottom lines
-          table.rows.add(null,
-            [[gSettings.stCAvg   ,'','','','','','','',''],
-            [gSettings.stCHighest,'','','','','','','',''],
-            [gSettings.stCLowest ,'','','','','','','','']]
-          );
+          .values =[[gSettings.stID,
+            gSettings.stName,
+            '英語',
+            '國文',
+            '數學',
+            '自然',
+            gSettings.stAvg,
+            gSettings.stTotal,
+            gSettings.stScore]];
+            // * [2018-02-01 15:19] Each student
+            table.rows.add(null /*add at the end*/,
+              [[1,'name1','','','','','','',''],
+              [2,'name2','','','','','','',''],
+              [3,'name3','','','','','','',''],
+              [4,'name4','','','','','','',''],
+              [5,'name5','','','','','','',''],
+            ]);
+            // * [2018-02-01 15:51] Add the bottom lines
+            table.rows.add(null,
+              [[gSettings.stCAvg   ,'','','','','','','',''],
+              [gSettings.stCHighest,'','','','','','','',''],
+              [gSettings.stCLowest ,'','','','','','','','']]
+            );
+          }
+          await ctx.sync();
+          if(callback){
+            callback();
+            await ctx.sync();
+          }
+          return true;
         }
-        await ctx.sync();
-        if(callback)
-          callback();
-        await ctx.sync();
-        return true;
-      }
-    ).catch(
-      err => {
-        this.messageService.add('createTempInSheet error: '+err);
-        if(err instanceof OfficeExtension.Error)
+      ).catch(
+        err => {
+          this.messageService.add('createTempInSheet error: '+err);
+          if(err instanceof OfficeExtension.Error)
           this.messageService.add('Debug Info: '+err.debugInfo);
-        return false;
-      }
-    );
+          return false;
+        }
+      );
+      
+    }
+    //#endregion   For Template input Worksheet
+    
+    constructor(private messageService: MessageService) { }
     
   }
-  //#endregion   For Template input Worksheet
-  
-  constructor(private messageService: MessageService) { }
-  
-}

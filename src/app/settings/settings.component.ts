@@ -15,6 +15,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class SettingsComponent implements OnInit {
   isTempSheetExist = false;
+  btGenTmpText = '➕產生樣板表單？';
 
   //#region   properties:
   gSettings: GlobalSettings = this.dataServerService.globalSettings;
@@ -45,8 +46,25 @@ export class SettingsComponent implements OnInit {
   showDialog0() {
     const data: dialogData = {
       title: '第一次使用',
-      message: `由於Settings尚未有任何資料，我已自動幫你產生了一份。\n
+      message: `由於Settings尚未有任何資料，我已自動幫你產生了一份。<br/>
       如不滿意，請依自己的需要修改，完畢後，請按最下面的更新鈕🔃即可更新。`,
+      buttons: [
+        {
+          text: '了解了',
+          action: (ref) => ref.close()
+      }
+      ]
+    };
+    this.appComponent.dialog.open(DialogComponent, {data: data});
+    this.messageService.add('SettingsComponent.ngOnInit.saveAsync: appComponent.dialog=' + this.appComponent.dialog);
+  }
+
+  showDialog1() {
+    const data: dialogData = {
+      title: '請先產生樣板表單',
+      message: `所有的成績輸入都以樣板表單為主。請先按按鈕
+      <br/>'${this.btGenTmpText}'<br/>
+      以自動產生一份表單給你。`,
       buttons: [
         {
           text: '了解了',
@@ -66,12 +84,12 @@ export class SettingsComponent implements OnInit {
       buttons: [
         {
           text: '變更', 
-          action: (ref) => {
+          action: async (ref) => {
             if(isTempExist===false){
-              this.refreshSettings();
+              await this.genTempIn();
             }
             if(isUnChanged===false){
-              this.genTempIn();
+              this.refreshSettings();
             }
             ref.close(); asyncResult.next(true); asyncResult.complete();
           }
@@ -106,33 +124,32 @@ export class SettingsComponent implements OnInit {
   }
   //#endregion  For automatically checking the existance of TempIn file
 
-  genTempIn(): void {
+  async genTempIn(): Promise<void> {
     this.appComponent.setOfSpinner = {isActivate: true, title: '創建樣板中', message: '請稍候'};
-    this.dataServerService.createTempInSheet(this.gSettings, () => {
+    await this.dataServerService.createTempInSheet(this.gSettings);
         this.messageService.add(`settingsComponent.genTempIn:after createTempInSheet`);
         this.appComponent.setOfSpinner = {isActivate: false, title: '進行中', message: '請稍候'};
-      }
-    );
+      
     
+
+    this.isTempSheetExist = true;
+
     setTimeout( 
       () => { 
       if(this.appComponent.setOfSpinner.isActivate===true){
         this.appComponent.setOfSpinner = {isActivate: false, title: '進行中', message: '請稍候'};
-        this.isTempSheetExist = true;
       }}
     ,10000);
 
   }
 
 
-  ngOnInit() {
+  async ngOnInit() {
     this.iniSettings = new GlobalSettings(this.gSettings); //It is used to check whether it is changed.
     const isSet = this.dataServerService.isSet();
     if (isSet === false) {
-      this.dataServerService.updateSettingsToServer()
-      .then(() => {
-        setTimeout(() => {this.showDialog0(); }, 500);
-      });
+      await this.dataServerService.updateSettingsToServer();
+      setTimeout(()=>this.showDialog0(),500); // You cannot show it immediately because it is not initialized during this ngOnInit.
       this.messageService.add('SettingsComponent.ngOnInit.saveAsync: isSet=' + this.dataServerService.isSet());
     }
 
@@ -143,16 +160,19 @@ export class SettingsComponent implements OnInit {
         this.messageService.add('template input does exist: ' + isHere);
       });
     // * [2018-01-29 17:56] Check whether the template worksheet does exist.
-    // * TODO::
-    this.dataServerService.checkWorksheetExistance(this.gSettings.templateWorksheetName).then(iB => this.isTempSheetExist = iB);
+    const iB =await this.dataServerService.checkWorksheetExistance(this.gSettings.templateWorksheetName);
+    this.isTempSheetExist = iB;
+    if(isSet===true && iB===false){
+      setTimeout(()=>this.showDialog1(),500);
+    }
   }
 
   async canDeactivate() {
     let message :string ='';
     const isTempExist = await this.dataServerService.checkWorksheetExistance(this.gSettings.templateWorksheetName);
-    if(isTempExist===false) message+= `工作表${this.gSettings.templateWorksheetName}不存在。\n`;
+    if(isTempExist===false) message+= `工作表${this.gSettings.templateWorksheetName}不存在。<br/>`;
     const isUnChanged = this.gSettings.isTheSame(this.iniSettings);
-    if(isUnChanged===false) message+= '設定已經改變。\n';
+    if(isUnChanged===false) message+= '設定已經改變。<br/>';
     if(isUnChanged && isTempExist) {
       return true;
     }
