@@ -3,10 +3,26 @@ import { MessageService } from './message.service';
 import { GlobalSettings } from './global-settings';
 import { forEach } from '@angular/router/src/utils/collection';
 import { resolve } from 'q';
-import { ExcelHelperModule } from './excel-helper/excel-helper.module';
+import { ExcelHelperModule, ICellsBound } from './excel-helper/excel-helper.module';
 
 @Injectable()
 export class DataServerService {
+  private fillFormulasCAvgEtc(worksheet: Excel.Worksheet, cInfos: ImainCellsInfo, course: ICourseCellInfo): any {
+    const address = ExcelHelperModule.cellsToAddress(
+      [cInfos.courseBound.from[0],course.rc[1]],
+      [cInfos.courseBound.to[0],course.rc[1]]
+    );
+    if(cInfos.cAvg){
+      worksheet.getCell(cInfos.cAvg[0],course.rc[1]).formulas=[[`=AVERAGE(${address})`]];
+    }
+    if(cInfos.cHighest){
+      worksheet.getCell(cInfos.cHighest[0],course.rc[1]).formulas=[[`=MAX(${address})`]];
+    }
+    if(cInfos.cLowest){
+      worksheet.getCell(cInfos.cLowest[0],course.rc[1]).formulas=[[`=MIN(${address})`]];
+    }
+  }
+
   //#region   WorkSheetNames
   worksheetNames: string[]= [];
   
@@ -38,12 +54,16 @@ export class DataServerService {
   checkWorksheetExistance(stSheetName: string):OfficeExtension.IPromise<boolean>{
     return Excel.run(
       async ctx =>{
-        let witem = ctx.workbook.worksheets.getItem(stSheetName);
+        let witem = ctx.workbook.worksheets.getItemOrNullObject(stSheetName);
         await ctx.sync(false); //You need to synchronize witem before you use it.
-        
-        let isExist = (witem=={})?false:true;    
+        let isExist = false;
+        if(witem){
+          witem.load('name');
+          await ctx.sync();
+          isExist = (witem.name!==undefined);
+        }
         this.messageService.add("dataServerService.checkWorksheetExistance: "+ isExist);
-        this.messageService.add(`witem:${stSheetName}` + JSON.stringify(witem));
+        this.messageService.add(`witem:${stSheetName}` + JSON.stringify(witem)+ '  '+witem.name);
         return await ctx.sync(isExist);
       }
     ).catch(
@@ -161,15 +181,17 @@ export class DataServerService {
               [[1,'name1','','','','','','',''],
               [2,'name2','','','','','','',''],
               [3,'name3','','','','','','',''],
-              [4,'name4','','','','','','',''],
-              [5,'name5','','','','','','',''],
+              [4,'name4','','','','','','','']
             ]);
             // * [2018-02-01 15:51] Add the bottom lines
-            table.rows.add(null,
-              [[gSettings.stCAvg   ,'','','','','','','',''],
-              [gSettings.stCHighest,'','','','','','','',''],
-              [gSettings.stCLowest ,'','','','','','','','']]
-            );
+            let bufLastCell = table.getRange().getLastCell();
+            bufLastCell.load('address');
+            await ctx.sync();
+            let nRow = ExcelHelperModule.addressToCells( bufLastCell.address).from[0];
+            sheet.getCell(nRow+2,0).values =  [[gSettings.stCAvg]];
+            sheet.getCell(nRow+3,0).values =  [[gSettings.stCHighest]];
+            sheet.getCell(nRow+4,0).values =  [[gSettings.stCLowest]];
+            sheet.getRange(ExcelHelperModule.cellsToAddress([nRow+1,0],[nRow+1,1])).values =[['5','name5']];
           }
           await ctx.sync();
           if(callback){
@@ -189,7 +211,188 @@ export class DataServerService {
       
     }
     //#endregion   For Template input Worksheet
+    /**
+    * In fact, it is available in beta version; however, I'm not sure whether the beta one can pass the certification of Microsoft Office. Once it is available in the stable version, I'll change this method to it.
+    * @param  {string} sName   : Source Worksheet name
+    * @param  {string} dName?  : Destinating Worksheet name. If it is null, its name will be ${sName}_copy
+    * @returns Promise<boolean>
+    */
+    async duplicateASheet(sName: string, dName?: string, yearSemTimes?: IYearSemTimes): Promise<boolean>{
+      let run = await Excel.run(
+        async ctx =>{
+          // * [2018-02-07 19:18] Check whether the worksheet 'sName' does exist.
+          const isSourceExist = await this.checkWorksheetExistance(sName);
+          if(isSourceExist===false) return false;
+          // * [2018-02-07 19:20] add the destinate worksheet
+          dName = (dName)?dName:(sName+'_copy');
+          let dWorksheet = ctx.workbook.worksheets.add(dName);
+          dWorksheet.activate();
+          // * [2018-02-07 19:24] copy data to the destinate worksheet
+          const sWorksheet = ctx.workbook.worksheets.getItem(sName);
+          var range = sWorksheet.getUsedRange();
+          range.load('address, formulas');
+          await ctx.sync();
+          this.messageService.add("DEBUG range.address:"+range.address);
+          var newAddress = range.address.substring(range.address.indexOf('!')+1);
+          var dRange = dWorksheet.getRange(newAddress);
+          dRange.formulas = range.formulas;
+          await ctx.sync();
+          // * [2018-02-08 18:04] copy table selection
+          sWorksheet.tables.load('items');
+          await ctx.sync();
+          for (const item of sWorksheet.tables.items) {
+            let oRange = item.getRange();
+            oRange.load('address');
+            await ctx.sync();
+            this.messageService.add("DEBUG address:"+oRange.address);
+            dWorksheet.tables.add(
+              oRange.address.substring(oRange.address.indexOf('!')+1)
+              , true
+            );
+          }
+          // * [2018-02-08 18:29] copy merge
+          dRange.getRow(0).merge(true);
+          let titleCell = dRange.getCell(0,0);
+          titleCell.format.horizontalAlignment = 'Center';
+          titleCell.load('text');
+          await ctx.sync();
+          if(yearSemTimes){
+            titleCell.values=[[(titleCell.text[0][0])
+            .replace(/\$YEAR\$/g,yearSemTimes.year)
+            .replace(/\$SEM\$/g,yearSemTimes.sem)
+            .replace(/\$TIMES\$/g,yearSemTimes.times)
+          ]];
+          }
+          await ctx.sync();
+          // * [2018-02-11 15:46] Get startRow, endRow, startColumn, endColumn, Total, Avg, Grade, CAvg, CHighest and CLowest, respectively.
+          let cInfos = await this.getMainCellsInfo(ctx, dWorksheet);
+          this.messageService.add('cInfos: '+JSON.stringify(cInfos));
+          let icForScore =(cInfos.total)?cInfos.total[1]:((cInfos.avg)?cInfos.avg[1]:-1);
+          let addressForScore = ExcelHelperModule.cellsToAddress([cInfos.courseBound.from[0],icForScore],[cInfos.courseBound.to[0],icForScore],[true,false]);
+          this.messageService.add("addressForScore:"+addressForScore);
+          // * [2018-02-13 16:28] Write formulas for Total & Avg & score
+          for(let ir0 = cInfos.courseBound.from[0]; ir0 <= cInfos.courseBound.to[0]; ir0++){
+            let bufAddress = ExcelHelperModule.cellsToAddress([ir0,cInfos.courseBound.from[1]], [ir0,cInfos.courseBound.to[1]]);
+            if(cInfos.total){
+              dWorksheet.getCell(ir0,cInfos.total[1]).formulas=[[`=SUM(${bufAddress})`]];
+            }
+            if(cInfos.avg){
+              dWorksheet.getCell(ir0,cInfos.avg[1]).formulas=[[`=AVERAGE(${bufAddress})`]];
+            }
+            if(cInfos.score && icForScore!==-1){
+              dWorksheet.getCell(ir0,cInfos.score[1]).formulas=[[`=RANK.EQ(
+                ${ExcelHelperModule.cellsToAddress([ir0,icForScore])},
+                ${addressForScore}
+              )`]];
+            }
+          }
+          // * [2018-02-14 15:39] Write formulas for each courses
+          for (const item of cInfos.courses) {
+            this.fillFormulasCAvgEtc(dWorksheet,cInfos,item);
+          }
+          if(cInfos.total) this.fillFormulasCAvgEtc(dWorksheet,cInfos,{rc: cInfos.total});
+          if(cInfos.avg) this.fillFormulasCAvgEtc(dWorksheet,cInfos,{rc: cInfos.avg});
+
+          return await ctx.sync(true);
+        }
+      );
+      return run;
+    }
     
+    async getMainCellsInfo(ctx: Excel.RequestContext, worksheet: Excel.Worksheet): Promise<ImainCellsInfo>{
+      let result :ImainCellsInfo ={id:[-1,-1], courses:[]};
+      // * [2018-02-12 11:57] GetUsedRange
+      let range = worksheet.getUsedRange();
+      range.load(['address','text']);
+      await ctx.sync();
+      const bound = ExcelHelperModule.addressToCells(range.address); // The start and end of UsedRange
+      result.bound = bound;
+      result.courseBound = {from:[bound.from[0],bound.from[1]], to: [bound.to[0],bound.to[1]]};
+      // * [2018-02-12 12:32] Scan this range to get id, name, avg, total, score
+      let isFound: boolean = false;
+      for (let ir0 = bound.from[0]; ir0 <= bound.to[0]; ir0++) {
+        if(isFound) break;
+        for (let ic0 = bound.from[1]; ic0 <= bound.to[1]; ic0++) {
+          let value = (range.text[ir0-bound.from[0]][ic0-bound.from[1]]).trim();
+          if(value === this.globalSettings.stID){
+            result.id = [ir0, ic0];
+            if(result.courseBound.from[0]<(ir0+1)) result.courseBound.from[0] = ir0+1;
+            if(result.courseBound.from[1]<(ic0+1)) result.courseBound.from[1] = ic0+1;
+            isFound = true;
+          } else if(value === this.globalSettings.stName){
+            result.name = [ir0, ic0];
+            if(result.courseBound.from[0]<(ir0+1)) result.courseBound.from[0] = ir0+1;
+            if(result.courseBound.from[1]<(ic0+1)) result.courseBound.from[1] = ic0+1;
+            isFound = true;
+          } else if(value === this.globalSettings.stTotal){
+            result.total = [ir0, ic0];
+            if(result.courseBound.to[1]>(ic0-1)) result.courseBound.to[1] = ic0-1;
+            isFound = true;
+          } else if(value === this.globalSettings.stAvg){
+            result.avg = [ir0, ic0];
+            if(result.courseBound.to[1]>(ic0-1)) result.courseBound.to[1] = ic0-1;
+            isFound = true;
+          } else if(value === this.globalSettings.stScore){
+            result.score = [ir0, ic0];
+            if(result.courseBound.to[1]>(ic0-1)) result.courseBound.to[1] = ic0-1;
+            isFound = true;
+          } else if (isFound){
+            result.courses.push({name: value, rc:[ir0, ic0]});
+          } else {
+            isFound = false;
+          }
+        }
+      }
+      // * [2018-02-12 15:53] Get cAvg, cHighest, cLowest
+      isFound =false;
+      for( let ic0 = bound.from[1]; ic0<=bound.to[1];ic0++){
+        if(isFound) break;
+        for(let ir0 = bound.from[0];ir0<=bound.to[0];ir0++){
+          let value = range.text[ir0-bound.from[0]][ic0-bound.from[1]].trim();
+          if(value === this.globalSettings.stCAvg){
+            isFound = true;
+            if(result.courseBound.to[0]>(ir0-1)) result.courseBound.to[0] = ir0-1;
+            result.cAvg = [ir0, ic0];
+          } else if (value === this.globalSettings.stCHighest){
+            isFound = true;
+            if(result.courseBound.to[0]>(ir0-1)) result.courseBound.to[0] = ir0-1;
+            result.cHighest = [ir0,ic0];
+          } else if (value === this.globalSettings.stCLowest){
+            isFound = true;
+            if(result.courseBound.to[0]>(ir0-1)) result.courseBound.to[0] = ir0-1;
+            result.cLowest = [ir0,ic0];
+          }
+        }
+      }
+
+      return result;
+    }
+
     constructor(private messageService: MessageService) { }
     
+  }
+
+  export interface ImainCellsInfo{
+    bound?: ICellsBound;
+    courseBound?: ICellsBound;
+    id: [number, number];
+    name?: [number, number];
+    avg?: [number, number];
+    total?: [number, number];
+    score?: [number, number];
+    cAvg?: [number, number];
+    cHighest?: [number,number];
+    cLowest?: [number,number];
+    courses: Array<ICourseCellInfo>;
+  }
+
+  export interface ICourseCellInfo{
+    name?: string,
+    rc: [number, number]
+  }
+
+  export interface IYearSemTimes{
+    year: string;
+    sem: string;
+    times: string;
   }

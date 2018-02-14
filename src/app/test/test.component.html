@@ -32,6 +32,9 @@
   <button (click)="checkExistanceOfTempSheet()">Check Template sheet</button>
   <button (click)="genTempIn()">Generate Sheet</button>
 </div>
+<div>
+  <button (click)="duplicateASheet()">Duplicate the template worksheet</button>
+</div>
 <ul>
   <li *ngFor="let message of messageService.messages">
     {{message}}

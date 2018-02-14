@@ -29,12 +29,12 @@
       <mat-form-field>
         <input matInput placeholder="ID：" 
         [value]="this.gSettings.stID"
-        (input)="this.gSettings.stID = $event.target.value"/>
+        (input)="this.gSettings.stID = $event.target.value.trim()"/>
      </mat-form-field>
       <mat-form-field>
         <input matInput placeholder="Name："
          [value]="this.gSettings.stName"
-         (input)="this.gSettings.stName = $event.target.value"/>
+         (input)="this.gSettings.stName = $event.target.value.trim()"/>
       </mat-form-field>    
     </div>
     <div class="block2">
@@ -44,17 +44,17 @@
           <mat-form-field>
         <input matInput placeholder="Total："
         [value]="this.gSettings.stTotal"
-        (input)="this.gSettings.stTotal = $event.target.value"/>
+        (input)="this.gSettings.stTotal = $event.target.value.trim()"/>
      </mat-form-field>
       <mat-form-field>
         <input matInput placeholder="Average："
         [value]="this.gSettings.stAvg"
-        (input)="this.gSettings.stAvg = $event.target.value"/>
+        (input)="this.gSettings.stAvg = $event.target.value.trim()"/>
      </mat-form-field>
       <mat-form-field>
         <input matInput placeholder="Score："
         [value]="this.gSettings.stScore"
-        (input)="this.gSettings.stScore = $event.target.value"/>
+        (input)="this.gSettings.stScore = $event.target.value.trim()"/>
       </mat-form-field>    
     </div> 
   </div>
@@ -65,17 +65,17 @@
     <mat-form-field>
       <input matInput placeholder="Course Average：" 
       [value]="this.gSettings.stCAvg"
-      (input)="this.gSettings.stCAvg = $event.target.value"/>
+      (input)="this.gSettings.stCAvg = $event.target.value.trim()"/>
    </mat-form-field>
    <mat-form-field>
     <input matInput placeholder="Course Highest：" 
     [value]="this.gSettings.stCHighest"
-    (input)="this.gSettings.stCHighest = $event.target.value"/>
+    (input)="this.gSettings.stCHighest = $event.target.value.trim()"/>
  </mat-form-field>
  <mat-form-field>
   <input matInput placeholder="Course Lowest：" 
   [value]="this.gSettings.stCLowest"
-  (input)="this.gSettings.stCLowest = $event.target.value"/>
+  (input)="this.gSettings.stCLowest = $event.target.value.trim()"/>
 </mat-form-field>
 
   </div>

@@ -247,6 +247,10 @@ genTempIn(): void {
 
 }
 
+async duplicateASheet():Promise<void>{
+  await this.dataServerService.duplicateASheet(this.dataServerService.globalSettings.templateWorksheetName, 'Happy',{year:'2017',sem:'2',times:'1st'});
+  this.messageService.add("testComponent.duplcateASheet: "+this.dataServerService.globalSettings.templateWorksheetName);
+}
 
 constructor(public messageService: MessageService, private dataServerService:DataServerService,
   private appComponent:AppComponent) { }

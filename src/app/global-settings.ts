@@ -14,7 +14,7 @@ export class GlobalSettings {
 
     constructor (gSettings?: GlobalSettings){
         this.usedTimes =(gSettings)?gSettings.usedTimes: 0;
-        this.templateWorksheetName =(gSettings)?gSettings.templateWorksheetName:  "temp-in";
+        this.templateWorksheetName =(gSettings)?gSettings.templateWorksheetName:  "temp_in";
         this.stID =(gSettings)?gSettings.stID:  "座號";
         this.stName =(gSettings)?gSettings.stName:  "姓名";
         this.stAvg =(gSettings)?gSettings.stAvg:  "平均";
