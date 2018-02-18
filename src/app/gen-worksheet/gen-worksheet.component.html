@@ -1,0 +1,38 @@
+<div class="typeContainer" [class.hasShadow]='this.currentGen===this.typeOfGen.newWorksheet'>
+  <div class="selType"
+   (click)='this.currentGen=this.typeOfGen.newWorksheet'>📋產生新表單</div>
+  <div *ngIf='this.currentGen===this.typeOfGen.newWorksheet'>
+    <mat-form-field class="inline">
+      <input matInput 
+      placeholder="新表單名稱形式；" 
+      [value]="this.gsettings.eachSheet+'   ➡   '+this.newSheetName"
+      disabled='disabled'/>
+   </mat-form-field>
+   <div>
+    <mat-form-field class="block">
+      <input matInput 
+      placeholder="學年：" 
+      [value]="this.gsettings.new_year"
+      (input)='this.gsettings.new_year=$event.target.value;this.updateNewSheetName()'/>
+    </mat-form-field>
+    <mat-form-field class="block">
+      <input matInput 
+      placeholder="學期：" 
+      [value]="this.gsettings.new_sem"
+      (input)='this.gsettings.new_sem=$event.target.value;this.updateNewSheetName()'/>
+    </mat-form-field>
+    <mat-form-field class="block">
+      <input matInput 
+      placeholder="第幾次：" 
+      [value]="this.gsettings.new_times"
+      (input)='this.gsettings.new_times=$event.target.value;this.updateNewSheetName()'/>
+    </mat-form-field>
+    <button mat-raised-button (click)='genNewSheet()'>產生新表單</button>
+   </div>
+  </div>
+</div>
+<div class="typeContainer" [class.hasShadow]='this.currentGen===this.typeOfGen.newCharts'>
+  <div class="selType"
+   (click)='this.currentGen=this.typeOfGen.newCharts'>📈產生新圖表</div>
+  <div *ngIf='this.currentGen===this.typeOfGen.newCharts'>顯示我</div>
+</div>

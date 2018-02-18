@@ -5,9 +5,11 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { TestComponent } from './test/test.component';
 import { SettingsComponent } from './settings/settings.component';
 import { CanDeactivateGuardService } from './can-deactivate-guard.service';
+import { GenWorksheetComponent } from './gen-worksheet/gen-worksheet.component';
 
 const routes : Routes=[
   {path: 'welcome', component: WelcomeComponent},
+  {path: 'generate', component: GenWorksheetComponent},
   {path: 'test', component: TestComponent},
   {path: 'settings', 
     component: SettingsComponent, 

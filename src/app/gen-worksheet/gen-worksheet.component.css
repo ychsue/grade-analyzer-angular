@@ -1,0 +1,29 @@
+.typeContainer{
+    border: solid 1px;
+    border-radius: 4px;
+}
+
+.selType{
+    text-align: center;
+    padding: 10px;
+    background: wheat;
+}
+
+.selType:hover{
+    cursor: pointer;
+    background: #aaaaaa;
+}
+
+.hasShadow{
+    margin: 0 4px 4px 0;
+    box-shadow: 4px 4px 8px #999999;
+}
+
+.inline{
+    display: inline;
+}
+
+.block{
+    /* display: inline-table; */
+    width: 30%;
+}

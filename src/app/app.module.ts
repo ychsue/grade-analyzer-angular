@@ -14,6 +14,7 @@ import { DialogComponent } from './dialog/dialog.component';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { FormsModule } from '@angular/forms';
 import { ExcelHelperModule } from './excel-helper/excel-helper.module';
+import { GenWorksheetComponent } from './gen-worksheet/gen-worksheet.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { ExcelHelperModule } from './excel-helper/excel-helper.module';
     TestComponent,
     SettingsComponent,
     DialogComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    GenWorksheetComponent
   ],
   imports: [
     BrowserModule,

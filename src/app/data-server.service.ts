@@ -295,7 +295,12 @@ export class DataServerService {
 
           return await ctx.sync(true);
         }
-      );
+      ).catch( async err => {
+        this.messageService.add(`DataServerService.duplicateASheet: Error`+err);
+        if(err instanceof OfficeExtension.Error)
+          this.messageService.add('Debug Info: '+err.debugInfo);
+        return false;
+      });
       return run;
     }
     

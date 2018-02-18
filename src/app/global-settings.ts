@@ -12,6 +12,11 @@ export class GlobalSettings {
     stCLowest: string;
     eachSheet: string;
 
+    //For newest worksheet name
+    new_year: string;
+    new_sem: string;
+    new_times: string;
+
     constructor (gSettings?: GlobalSettings){
         this.usedTimes =(gSettings)?gSettings.usedTimes: 0;
         this.templateWorksheetName =(gSettings)?gSettings.templateWorksheetName:  "temp_in";
@@ -24,7 +29,11 @@ export class GlobalSettings {
         this.stCAvg =(gSettings)?gSettings.stCAvg:  "各科平均";
         this.stCHighest =(gSettings)?gSettings.stCHighest:  "最高分";
         this.stCLowest =(gSettings)?gSettings.stCLowest:  "最低分";
-        this.eachSheet =(gSettings)?gSettings.eachSheet:  "$YEAR$_$SEM$_$TIMES$";
+        this.eachSheet =(gSettings)?gSettings.eachSheet:  "\$YEAR\$_\$SEM\$_\$TIMES\$";
+
+        this.new_year = (gSettings)?gSettings.new_year:'106';
+        this.new_sem = (gSettings)?gSettings.new_sem:'2';
+        this.new_times =(gSettings)?gSettings.new_times:'1';
     }
 
     isTheSame(compared: GlobalSettings): boolean{
