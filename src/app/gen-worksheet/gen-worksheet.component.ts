@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { trigger, transition, animate, style, state } from "@angular/animations";
 import { MessageService } from '../message.service';
 import { DataServerService } from '../data-server.service';
 import { GlobalSettings } from '../global-settings';
@@ -7,6 +8,20 @@ import { DialogComponent, dialogData } from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-gen-worksheet',
+  animations: [
+    trigger('fadeInOut', [
+      state('*', style({'overflow-y': 'hidden'})),
+      state('void',style({'overflow-y': 'hidden'})),
+      transition('* => void',[
+        style({height: '*'}),
+        animate(250, style({height: 0}))
+      ]),
+      transition('void => *',[
+        style({height: 0}),
+        animate(250,style({height: '*'}))
+      ])
+    ])
+  ],
   templateUrl: './gen-worksheet.component.html',
   styleUrls: ['./gen-worksheet.component.css']
 })

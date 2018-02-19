@@ -1,7 +1,7 @@
 <div class="typeContainer" [class.hasShadow]='this.currentGen===this.typeOfGen.newWorksheet'>
   <div class="selType"
    (click)='this.currentGen=this.typeOfGen.newWorksheet'>📋產生新表單</div>
-  <div *ngIf='this.currentGen===this.typeOfGen.newWorksheet'>
+  <div *ngIf='this.currentGen===this.typeOfGen.newWorksheet' [@fadeInOut]>
     <mat-form-field class="inline">
       <input matInput 
       placeholder="新表單名稱形式；" 
@@ -34,5 +34,5 @@
 <div class="typeContainer" [class.hasShadow]='this.currentGen===this.typeOfGen.newCharts'>
   <div class="selType"
    (click)='this.currentGen=this.typeOfGen.newCharts'>📈產生新圖表</div>
-  <div *ngIf='this.currentGen===this.typeOfGen.newCharts'>顯示我</div>
+  <div *ngIf='this.currentGen===this.typeOfGen.newCharts' [@fadeInOut]>顯示我</div>
 </div>
