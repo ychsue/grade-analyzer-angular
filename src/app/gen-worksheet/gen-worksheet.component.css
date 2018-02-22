@@ -27,3 +27,7 @@
     /* display: inline-table; */
     width: 30%;
 }
+
+.col2{
+    max-width: 48%;
+}

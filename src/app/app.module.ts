@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { MatProgressSpinnerModule, MatDialogModule, MatButtonModule, MatInputModule, MatMenuModule, MatIconModule, MatToolbarModule } from "@angular/material";
+import { MatProgressSpinnerModule, MatDialogModule, MatButtonModule, MatInputModule, MatMenuModule, MatIconModule, MatToolbarModule, MatSelectModule } from "@angular/material";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { AppComponent } from './app.component';
@@ -31,6 +31,7 @@ import { GenWorksheetComponent } from './gen-worksheet/gen-worksheet.component';
     BrowserModule,
     FormsModule,
     AppRoutingModule,
+    MatSelectModule,
     MatProgressSpinnerModule,
     MatDialogModule,
     MatButtonModule,
