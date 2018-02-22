@@ -252,6 +252,21 @@ async duplicateASheet():Promise<void>{
   this.messageService.add("testComponent.duplcateASheet: "+this.dataServerService.globalSettings.templateWorksheetName);
 }
 
+checkGradeSheetName(stName:string): void{
+  this.messageService.add(`Before: Year_Sem_Times`);  
+  // let yst = await this.dataServerService.globalSettings.getSortedMagicWords(); //PASS
+  // let yst = await this.dataServerService.globalSettings.getRegExpPattern(); //PASS
+  let yst = this.dataServerService.globalSettings.parseYearSemTimes(stName); //PASS
+  this.messageService.add(`Year_Sem_Times= ${JSON.stringify(yst)}`);
+}
+
+async getGradeSheets():Promise<void>{
+  let dt = Date.now();
+  let infos = await this.dataServerService.getGradesheets();
+  this.messageService.add(`test.getGradeSheets: `+JSON.stringify(infos));
+  this.messageService.add(`test.getGradeSheets: delta t=+${(Date.now()-dt)/1000}`);
+}
+
 constructor(public messageService: MessageService, private dataServerService:DataServerService,
   private appComponent:AppComponent) { }
   

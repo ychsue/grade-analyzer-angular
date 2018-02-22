@@ -305,7 +305,9 @@ export class DataServerService {
     }
     
     async getMainCellsInfo(ctx: Excel.RequestContext, worksheet: Excel.Worksheet): Promise<ImainCellsInfo>{
-      let result :ImainCellsInfo ={id:[-1,-1], courses:[]};
+      worksheet.load('name');
+      await ctx.sync();
+      let result :ImainCellsInfo ={thisSheetName:worksheet.name, id:[-1,-1], courses:[]};
       // * [2018-02-12 11:57] GetUsedRange
       let range = worksheet.getUsedRange();
       range.load(['address','text']);
@@ -373,11 +375,45 @@ export class DataServerService {
       return result;
     }
 
+    async getGradesheets(pattern?: string):Promise<ImainCellsInfo[]>{
+      return await Excel.run( async ctx =>{
+        let gradesheets:ImainCellsInfo[]=[];
+        // * Get all the items of Worksheets
+        ctx.workbook.worksheets.load('items');
+        await ctx.sync();
+        let stRegexp:string;
+        let sortedWords: string[];
+        for (const worksheet of ctx.workbook.worksheets.items) {
+          worksheet.load('name');
+          await ctx.sync();
+          if(!sortedWords) sortedWords = this.globalSettings.getSortedMagicWords();
+          if(!stRegexp) stRegexp = this.globalSettings.getRegExpPattern();
+          this.messageService.add(`DataServer.getGradesheets: ${worksheet.name}`);
+          let yst = this.globalSettings.parseYearSemTimes(worksheet.name,stRegexp,sortedWords);
+          if(yst){
+            this.messageService.add(`DataServer.getGradesheets: ${JSON.stringify(yst)}`);
+            let info = await this.getMainCellsInfo(ctx, worksheet);
+            this.messageService.add(`DataServer.getGradesheets.info: ${JSON.stringify(info)}`);
+            info.YearSemTimes = yst;
+            gradesheets.push(info);          
+          }
+        }
+        return gradesheets;
+      }).catch( async err =>{
+        this.messageService.add('getWorksheets Error: '+err);
+        if (err instanceof OfficeExtension.Error)
+          this.messageService.add('Debug Info:' + err.debugInfo);
+        return [];
+      });
+    }
+
     constructor(private messageService: MessageService) { }
     
   }
 
   export interface ImainCellsInfo{
+    thisSheetName: string;
+    YearSemTimes?: IYearSemTimes;
     bound?: ICellsBound;
     courseBound?: ICellsBound;
     id: [number, number];

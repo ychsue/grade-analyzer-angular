@@ -1,3 +1,5 @@
+import { IYearSemTimes } from "./data-server.service";
+
 export class GlobalSettings {
     usedTimes:number;
     templateWorksheetName: string;
@@ -48,5 +50,65 @@ export class GlobalSettings {
             }
         }
         return iB;
+    }
+
+    getSortedMagicWords(pattern?: string, magicWords?: string[]):string[]{
+        pattern =(pattern)?pattern: this.eachSheet;
+        let objBuf: IYearSemTimes ={year:'', sem:'', times:''};
+        if(!magicWords){
+            magicWords= Object.keys(objBuf);
+        }
+        let orderedWords = this.sortMagicWords(pattern, magicWords);
+        return orderedWords;
+    }
+
+    getRegExpPattern(pattern?:string, magicWords?:string[]):string{
+        if(!magicWords) magicWords = this.getSortedMagicWords();
+        if(!pattern) pattern = this.eachSheet;
+        magicWords.forEach(key => {
+            pattern = pattern.replace(`\$${key.toUpperCase()}\$`,`([0-9a-zA-Z]+)`);
+        });
+        return pattern;
+    }
+
+    parseYearSemTimes(sheetName:string,regExpPattern?:string ,sortedMagicWords?:string[]):IYearSemTimes{
+        let result:IYearSemTimes;
+        if(!sortedMagicWords) sortedMagicWords = this.getSortedMagicWords();
+        if(!regExpPattern) regExpPattern = this.getRegExpPattern(this.eachSheet,sortedMagicWords);
+        let reg = new RegExp(regExpPattern,'g');
+        if(reg.test(sheetName)){
+            result ={year:'',sem:'',times:''};
+            reg.lastIndex = 0;
+            let arr = reg.exec(sheetName);
+            for (let i0 = 0; i0 < sortedMagicWords.length; i0++) {
+                const key = sortedMagicWords[i0];
+                result[key]=arr[i0+1];
+            }
+        }
+        return result;
+    }
+
+    
+    /**
+     * @param  {string} mainString      It is constituted of MagicWords
+     * @param  {string[]} magicWords    In the mainString, it is closed by '$', e.g year -> $YEAR$
+     * @returns string[]                The magic words will be reordered by their indese.
+     */
+    sortMagicWords(mainString:string, magicWords: string[]):string[]{
+        let result:string[] = [];
+        let iPos:[number,string][]=new Array<[number,string]>(); // Has the information of the index of all Magic Words
+        // * [2018-02-21 11:04] Get the used magicWords
+        for (const iWord of magicWords) {
+            let index =mainString.indexOf('\$'+iWord.toUpperCase()+'\$');
+            if(index >=0) {
+                iPos.push([index,iWord]);
+            }
+        }
+        // * [2018-02-21 11:12] Begin to sort them
+        result = iPos.sort((a,b)=>{
+            return a[0]-b[0]; 
+        }).map(x=>x[1]);
+
+        return result;
     }
 }

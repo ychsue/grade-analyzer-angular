@@ -35,6 +35,11 @@
 <div>
   <button (click)="duplicateASheet()">Duplicate the template worksheet</button>
 </div>
+<div>
+  <button (click)="checkGradeSheetName(gradeSheetName.value)">Grade?</button>
+  <input #gradeSheetName value='106_02_02'/>
+  <button (click)="getGradeSheets()">Get GradeSheets</button>
+</div>
 <ul>
   <li *ngFor="let message of messageService.messages">
     {{message}}
