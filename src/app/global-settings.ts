@@ -19,6 +19,9 @@ export class GlobalSettings {
     new_sem: string;
     new_times: string;
 
+    //For Sheet of Charts
+    chartSheetName: string;
+
     constructor (gSettings?: GlobalSettings){
         this.usedTimes =(gSettings)?gSettings.usedTimes: 0;
         this.templateWorksheetName =(gSettings)?gSettings.templateWorksheetName:  "temp_in";
@@ -36,6 +39,8 @@ export class GlobalSettings {
         this.new_year = (gSettings)?gSettings.new_year:'106';
         this.new_sem = (gSettings)?gSettings.new_sem:'2';
         this.new_times =(gSettings)?gSettings.new_times:'1';
+
+        this.chartSheetName =(gSettings)?gSettings.chartSheetName:'學生列表';
     }
 
     isTheSame(compared: GlobalSettings): boolean{

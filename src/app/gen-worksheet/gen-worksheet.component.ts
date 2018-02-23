@@ -27,6 +27,33 @@ import { DialogComponent, dialogData } from '../dialog/dialog.component';
 })
 export class GenWorksheetComponent implements OnInit {
 
+  updateGrades(): void {
+    // * [2018-02-22 15:49] Initialize
+    this.grades =[];
+    // * [2018-02-22 15:52] Get its values
+    let t = this.thisTimeGrade;
+    let p = this.previousTimeGrade;
+    let gs = this.dataServerService.globalSettings;
+    // ** [2018-02-22 16:07] Get total, avg and score
+    if(t.total && t.total[0]>=0){
+      this.grades.push({name:gs.stTotal,thisRC:t.total,prevRC:(p&&p.total)?p.total:null});
+    }
+    if(t.avg && t.avg[0]>=0){
+      this.grades.push({name:gs.stAvg,thisRC:t.avg,prevRC:(p&&p.avg)?p.avg:null});
+    }
+    if(t.score && t.score[0]>=0){
+      this.grades.push({name:gs.stScore,thisRC:t.score,prevRC:(p&&p.score)?p.score:null});
+    }
+    // ** [2018-02-22 16:08] Get all courses
+    for (const c of t.courses) {
+      let pCourse = (p.courses)?p.courses.find(x=> c.name ==x.name):null;
+      this.grades.push({name:c.name,thisRC:c.rc,prevRC:pCourse.rc});
+    }
+
+    if(this.grades.length>0)
+      this.chosenGrade = this.grades[0];
+  }
+
   backToGenGradeSheet(): void {
     this.currentGen = typeOfGen.newWorksheet;
     const data: dialogData={
@@ -38,6 +65,7 @@ export class GenWorksheetComponent implements OnInit {
       data: data
     });
   }
+
   //#region for typeOfGen
   // As mentioned in https://www.gurustop.net/blog/2016/05/24/how-to-use-typescript-enum-with-angular2/
   // this line is used for template html
@@ -46,7 +74,10 @@ export class GenWorksheetComponent implements OnInit {
   public set currentGen(v : typeOfGen) {
     this._currentGen = v;
     if(v==typeOfGen.newCharts){
-      this.updateAllGradeSheetsInfo().then(v=>{this.gradesInfo=v});
+      this.updateAllGradeSheetsInfo().then(v=>{
+        this.gradesInfo=v;
+        this.updateGrades();
+      });
     }
   }
   public get currentGen() : typeOfGen {
@@ -87,8 +118,28 @@ export class GenWorksheetComponent implements OnInit {
   //#endregion 1. Generate New Grade Sheet
   
   //#region 2. Generate New Chart Sheet
-  public thisTimeGrade: ImainCellsInfo;
+  //#region 2.1 Define thisTimeGrade and PreviousTimeGrade
+  public thisTimeGrade: ImainCellsInfo;  
+  // public set thisTimeGrade(v : ImainCellsInfo) {
+  //   this._thisTimeGrade = v;
+  //   this.updateGrades();
+  // }
+  // public get thisTimeGrade() : ImainCellsInfo {
+  //   return this._thisTimeGrade;
+  // }
+
   public previousTimeGrade: ImainCellsInfo;
+  // public set previousTimeGrade(v : ImainCellsInfo) {
+  //   this._previousTimeGrade = v;
+  //   this.updateGrades();
+  // }
+  // public get previousTimeGrade() : ImainCellsInfo {
+  //   return this._previousTimeGrade;
+  // }
+  //#endregion 2.1 Define thisTimeGrade and PreviousTimeGrade
+
+  public chosenGrade:{name:string,thisRC:[number,number],prevRC?:[number,number]};
+  public grades:{name:string,thisRC:[number,number],prevRC?:[number,number]}[];
   async updateAllGradeSheetsInfo():Promise<ImainCellsInfo[]>{
     let infos = await this.dataServerService.getGradesheets();
     infos = infos.sort((a,b)=>{
@@ -112,6 +163,14 @@ export class GenWorksheetComponent implements OnInit {
       this.backToGenGradeSheet();
     }
     return infos;
+  }
+
+  async genChartSheet():Promise<void>{
+    // * [2018-02-22 19:20] Saving the name of the sheet for charts
+    await this.dataServerService.updateSettingsToServer();
+    // * [2018-02-22 19:21] Open the chart
+    
+    // **************************************** TODO ************************************************
   }
   //#endregion 2. Generate New Chart Sheet
   constructor(private messageService:MessageService, private dataServerService: DataServerService, private appComponent: AppComponent) { }
