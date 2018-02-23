@@ -169,8 +169,11 @@ export class GenWorksheetComponent implements OnInit {
     // * [2018-02-22 19:20] Saving the name of the sheet for charts
     await this.dataServerService.updateSettingsToServer();
     // * [2018-02-22 19:21] Open the chart
-    
-    // **************************************** TODO ************************************************
+    await this.dataServerService.outputListsIntoWorksheet(this.gsettings.chartSheetName,this.gradesInfo,
+    (percent,stInfo)=>{
+      this.appComponent.setOfSpinner ={title:"創建圖表中",message:stInfo,isActivate:true,mode:"determinate",value:percent};
+    });    
+    this.appComponent.setOfSpinner ={title:"完成創建圖表",message:"DONE",isActivate:false,mode:"indeterminate",value:0};    
   }
   //#endregion 2. Generate New Chart Sheet
   constructor(private messageService:MessageService, private dataServerService: DataServerService, private appComponent: AppComponent) { }

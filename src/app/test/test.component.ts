@@ -267,6 +267,23 @@ async getGradeSheets():Promise<void>{
   this.messageService.add(`test.getGradeSheets: delta t=+${(Date.now()-dt)/1000}`);
 }
 
+async openASheet(stName:string):Promise<Excel.Worksheet>{
+  return await Excel.run(async ctx=>{
+    return await this.dataServerService.openASheet(ctx,stName);
+  });
+}
+
+async clearAsheet(stName:string):Promise<any>{
+  return await Excel.run(async ctx =>{
+    let sheet = await this.dataServerService.openASheet(ctx,stName);
+    let cell = sheet.getCell(1,0);
+    cell.load('format');
+    await ctx.sync();
+    this.messageService.add(`cell's height=${cell.format.rowHeight}, width=${cell.format.columnWidth}`);
+    return await this.dataServerService.clearASheet(ctx,sheet);
+  });
+}
+
 constructor(public messageService: MessageService, private dataServerService:DataServerService,
   private appComponent:AppComponent) { }
   

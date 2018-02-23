@@ -2,6 +2,6 @@
   <div>
     <h1 class="center">{{title}}</h1>
     <div class="center">{{message}}</div>
-    <mat-spinner class="center"></mat-spinner>
+    <mat-progress-spinner class="center" [mode]="(this.mode)?this.mode:this.modeStrings.indet" [value]="(this.value)?this.value:0"></mat-progress-spinner>
   </div>
 </div>

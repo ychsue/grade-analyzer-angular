@@ -7,6 +7,37 @@ import { ExcelHelperModule, ICellsBound } from './excel-helper/excel-helper.modu
 
 @Injectable()
 export class DataServerService {
+  async clearASheet(ctx: Excel.RequestContext,sheet: Excel.Worksheet): Promise<void> {
+    let buf = sheet.getUsedRangeOrNullObject(false);
+    await ctx.sync();
+    if(buf){
+      buf.load('name, address');
+      await ctx.sync();
+      this.messageService.add(`data.clearASheet: ${sheet.name}.address=${buf.address}`)
+      if(buf.address){
+        buf.clear();
+        await ctx.sync();
+      }
+    }
+  }
+  async openASheet(ctx: Excel.RequestContext,sheetName: string): Promise<Excel.Worksheet> {
+    let result:Excel.Worksheet = ctx.workbook.worksheets.getItemOrNullObject(sheetName);
+    //* [2018-02-23 12:07] Check whether the worksheet does exist and get it.
+    await ctx.sync();
+    let isSheetExist = false;
+    if(result){
+      result.load('name');
+      await ctx.sync();
+      if(result.name) isSheetExist =true;
+    }
+    this.messageService.add(`private data.openASheet: name=${sheetName} isSheetExist=${isSheetExist}`);
+    if(isSheetExist===false){
+      result = ctx.workbook.worksheets.add(sheetName);
+      await ctx.sync();
+    }
+
+    return result;
+  }
   private fillFormulasCAvgEtc(worksheet: Excel.Worksheet, cInfos: ImainCellsInfo, course: ICourseCellInfo): any {
     const address = ExcelHelperModule.cellsToAddress(
       [cInfos.courseBound.from[0],course.rc[1]],
@@ -404,6 +435,23 @@ export class DataServerService {
         if (err instanceof OfficeExtension.Error)
           this.messageService.add('Debug Info:' + err.debugInfo);
         return [];
+      });
+    }
+
+    async outputListsIntoWorksheet(sheetName:string,infos:ImainCellsInfo[],process?:(number,string)=>void):Promise<boolean>{
+      return await Excel.run(async ctx =>{
+        if(process)process(0,"開始");
+        // * [2018-02-23 12:03] Open the worksheet which name is ${sheetName}
+        let outputSheet = await this.openASheet(ctx, sheetName);
+        // * [2018-02-23 12:32] Clear this worksheet
+        await this.clearASheet(ctx, outputSheet);
+        // ******************************************** TODO *******************************************
+        return true;
+      }).catch(async err=>{
+        this.messageService.add(`data.outputListsIntoWorksheet Error: ${err}`);
+        if(err instanceof OfficeExtension.Error)
+          this.messageService.add(`Debug Info: ${err.debugInfo}`);
+        return false;
       });
     }
 

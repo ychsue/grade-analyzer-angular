@@ -25,10 +25,12 @@ export class AppComponent implements OnInit{
   }
   title:string = "Welcome AppComponent";
   
-  setOfSpinner = {
+  setOfSpinner:{isActivate:boolean, title:string, message:string, mode?:string,value?:number} = {
     isActivate: false,
     title: "Running",
-    message: "Please wait. It might takes a little time."
+    message: "Please wait. It might takes a little time.",
+    mode: "indeterminate",
+    value: 0
   };
 
   constructor(public dialog:MatDialog, 

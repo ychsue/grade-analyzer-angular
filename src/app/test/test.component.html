@@ -39,6 +39,8 @@
   <button (click)="checkGradeSheetName(gradeSheetName.value)">Grade?</button>
   <input #gradeSheetName value='106_02_02'/>
   <button (click)="getGradeSheets()">Get GradeSheets</button>
+  <button (click)="openASheet(gradeSheetName.value)">openASheet</button>
+  <button (click)="clearAsheet(gradeSheetName.value)">ClearASheet</button>
 </div>
 <ul>
   <li *ngFor="let message of messageService.messages">
