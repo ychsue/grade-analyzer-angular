@@ -138,8 +138,8 @@ export class GenWorksheetComponent implements OnInit {
   // }
   //#endregion 2.1 Define thisTimeGrade and PreviousTimeGrade
 
-  public chosenGrade:{name:string,thisRC:[number,number],prevRC?:[number,number]};
-  public grades:{name:string,thisRC:[number,number],prevRC?:[number,number]}[];
+  public chosenGrade:Igrade;
+  public grades:Igrade[];
   async updateAllGradeSheetsInfo():Promise<ImainCellsInfo[]>{
     let infos = await this.dataServerService.getGradesheets();
     infos = infos.sort((a,b)=>{
@@ -169,8 +169,9 @@ export class GenWorksheetComponent implements OnInit {
     // * [2018-02-22 19:20] Saving the name of the sheet for charts
     await this.dataServerService.updateSettingsToServer();
     // * [2018-02-22 19:21] Open the chart
-    await this.dataServerService.outputListsIntoWorksheet(this.gsettings.chartSheetName,this.gradesInfo,
-    (percent,stInfo)=>{
+    this.appComponent.setOfSpinner ={title:"創建圖表中",message:'創建中',isActivate:true,mode:"indeterminate",value:30};
+    await this.dataServerService.outputListsIntoWorksheet(this.gsettings.chartSheetName,this.chosenGrade,this.gradesInfo,this.thisTimeGrade,this.previousTimeGrade,
+    async (percent,stInfo)=>{
       this.appComponent.setOfSpinner ={title:"創建圖表中",message:stInfo,isActivate:true,mode:"determinate",value:percent};
     });    
     this.appComponent.setOfSpinner ={title:"完成創建圖表",message:"DONE",isActivate:false,mode:"indeterminate",value:0};    
@@ -187,4 +188,10 @@ export class GenWorksheetComponent implements OnInit {
 enum typeOfGen{
   newWorksheet,
   newCharts
+}
+
+export interface Igrade{
+  name:string,
+  thisRC:[number,number],
+  prevRC?:[number,number]
 }

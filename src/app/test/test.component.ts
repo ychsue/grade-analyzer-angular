@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from '../message.service';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
-import { DataServerService } from '../data-server.service';
+import { DataServerService, ImainCellsInfo } from '../data-server.service';
 import { AppComponent } from '../app.component';
 import { DialogComponent, dialogData } from '../dialog/dialog.component';
 
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { PageInfo } from '../page-info';
+import { ForEachStudent } from '../gen-worksheet/for-each-student';
 
 @Component({
   selector: 'app-test',
@@ -282,6 +284,13 @@ async clearAsheet(stName:string):Promise<any>{
     this.messageService.add(`cell's height=${cell.format.rowHeight}, width=${cell.format.columnWidth}`);
     return await this.dataServerService.clearASheet(ctx,sheet);
   });
+}
+
+testPageInfo(){
+  let info:ImainCellsInfo={"thisSheetName":"106_2_1","id":[2,0],"courses":[{"name":"英語","rc":[2,2]},{"name":"國文","rc":[2,3]},{"name":"數學","rc":[2,4]},{"name":"自然","rc":[2,5]}],"bound":{"from":[0,0],"to":[10,8]},"courseBound":{"from":[3,2],"to":[7,5]},"name":[2,1],"avg":[2,6],"total":[2,7],"score":[2,8],"cAvg":[8,0],"cHighest":[9,0],"cLowest":[10,0],"IdArray":["1","2","3","4","5"]};
+  let eachInfo = new ForEachStudent(info);
+  this.messageService.add(JSON.stringify(eachInfo));
+  this.messageService.add('Height='+eachInfo.suggestedChartHeight({}));
 }
 
 constructor(public messageService: MessageService, private dataServerService:DataServerService,
