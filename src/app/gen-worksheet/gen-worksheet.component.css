@@ -31,3 +31,18 @@
 .col2{
     max-width: 48%;
 }
+
+.detailSetForChart, .mainSetForChart{
+    margin: 4px;
+    border: blue solid;
+    border-radius: 4px;
+    box-shadow: gray 4px 4px 4px;
+}
+
+.boxLabel{
+    text-align: center;
+    background: white;
+    opacity: 0.8;
+    position: relative;
+    top: -4px;
+}

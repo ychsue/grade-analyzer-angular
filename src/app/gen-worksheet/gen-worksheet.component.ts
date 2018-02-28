@@ -5,6 +5,7 @@ import { DataServerService, ImainCellsInfo } from '../data-server.service';
 import { GlobalSettings } from '../global-settings';
 import { AppComponent } from '../app.component';
 import { DialogComponent, dialogData } from '../dialog/dialog.component';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
   selector: 'app-gen-worksheet',
@@ -166,17 +167,39 @@ export class GenWorksheetComponent implements OnInit {
   }
 
   async genChartSheet():Promise<void>{
+    let operator = new Subject<[number, string]>();
+    operator.subscribe(value=>{
+      this.appComponent.setOfSpinner ={title:"創建圖表中",message:value[1],isActivate:true,mode:"determinate",value:value[0]};
+    });
     // * [2018-02-22 19:20] Saving the name of the sheet for charts
     await this.dataServerService.updateSettingsToServer();
     // * [2018-02-22 19:21] Open the chart
     this.appComponent.setOfSpinner ={title:"創建圖表中",message:'創建中',isActivate:true,mode:"indeterminate",value:30};
-    await this.dataServerService.outputListsIntoWorksheet(this.gsettings.chartSheetName,this.chosenGrade,this.gradesInfo,this.thisTimeGrade,this.previousTimeGrade,
-    async (percent,stInfo)=>{
-      this.appComponent.setOfSpinner ={title:"創建圖表中",message:stInfo,isActivate:true,mode:"determinate",value:percent};
-    });    
+    await this.dataServerService.outputListsIntoWorksheet(this.gsettings.chartSheetName,this.chosenGrade,this.gradesInfo,this.thisTimeGrade,this.previousTimeGrade,operator);    
+    operator.complete();
     this.appComponent.setOfSpinner ={title:"完成創建圖表",message:"DONE",isActivate:false,mode:"indeterminate",value:0};    
   }
   //#endregion 2. Generate New Chart Sheet
+
+  async applyFormat():Promise<void>{
+    let operator = new Subject<[number, string]>();
+    operator.subscribe(value=>{
+      this.appComponent.setOfSpinner ={title:"套用格式中",message:value[1],isActivate:true,mode:"determinate",value:value[0]};      
+    });
+    this.appComponent.setOfSpinner ={title:"套用格式中",message:'套用中',isActivate:true,mode:"indeterminate",value:30};
+    let msg = await this.dataServerService.apply1stFormatToAll(this.gsettings.chartSheetName,this.gradesInfo[0].IdArray.length,
+    operator);
+    this.appComponent.setOfSpinner ={title:"完成",message:'Done',isActivate:false,mode:"indeterminate",value:0};
+    operator.complete();
+    if(msg){
+      let data:dialogData ={
+        title: `表單 ${this.gsettings.chartSheetName} 可能不存在`,
+        message: `${msg}`,
+        buttons: [{action: ref=>{ref.close();}, text:"了解了"}]
+      };
+      this.appComponent.dialog.open(DialogComponent,{data: data});
+    }
+  }
   constructor(private messageService:MessageService, private dataServerService: DataServerService, private appComponent: AppComponent) { }
 
   ngOnInit() {

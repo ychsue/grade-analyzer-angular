@@ -6,9 +6,25 @@ import { resolve } from 'q';
 import { ExcelHelperModule, ICellsBound } from './excel-helper/excel-helper.module';
 import { ForEachStudent } from './gen-worksheet/for-each-student';
 import { Igrade } from './gen-worksheet/gen-worksheet.component';
+import { Subject } from "rxjs/Subject";
 
 @Injectable()
 export class DataServerService {
+  async copyFormat(nWidth:number,nHeight:number,ithStudent:number,sheet:Excel.Worksheet,ctx: Excel.RequestContext): Promise<void> {
+    for (let iW = 0; iW < nWidth;  iW++) {
+      for (let iH = 0; iH < nHeight; iH++) {
+        let sCell = sheet.getCell(iH,iW);
+        let dCell = sheet.getCell(iH+ithStudent*nHeight,iW);
+        sCell.load('format/*,format/fill,format/font,format/borders');
+        await ctx.sync();
+        dCell.format.set(sCell.format);
+        for (const item of sCell.format.borders.items) {
+          dCell.format.borders.getItem(item.sideIndex).style = item.style;
+        }
+        await ctx.sync();
+      }  
+    }
+  }
   async clearASheet(ctx: Excel.RequestContext,sheet: Excel.Worksheet,clearOption?:string,isClearTable:boolean=true): Promise<void> {
     let buf = sheet.getUsedRangeOrNullObject(false);
     if(!clearOption) clearOption = Excel.ClearApplyTo.all;
@@ -455,9 +471,9 @@ export class DataServerService {
     });
   }
   
-  async outputListsIntoWorksheet(sheetName:string,grade:Igrade,infos:ImainCellsInfo[],tInfo:ImainCellsInfo,pInfo:ImainCellsInfo, process?:(number,string)=>void):Promise<boolean>{
+  async outputListsIntoWorksheet(sheetName:string,grade:Igrade,infos:ImainCellsInfo[],tInfo:ImainCellsInfo,pInfo:ImainCellsInfo, process?:Subject<[number,string]>):Promise<boolean>{
     return await Excel.run(async ctx =>{
-      if(process)await process(0,"開始");
+      if(process) await process.next([0,"開始"]);
       // * [2018-02-23 12:03] Open the worksheet which name is ${sheetName}
       let outputSheet = await this.openASheet(ctx, sheetName);
       const tableSheetNameForChart = `${sheetName}_${grade.name}`;
@@ -603,16 +619,20 @@ export class DataServerService {
         // #endregion ** [2018-02-26 15:34] For Avg, Score and Total
 
         // ** [2018-02-26 16:28] Draw a chart
-        outputSheet.getRange(`${currentRow+2}:${currentRow+2}`).format.rowHeight = eachInfo.suggestedChartHeight({});
+        let specialH:number =50;
+        outputSheet.getRange(`${currentRow+1}:${currentRow+1}`).format.rowHeight = specialH;
+        outputSheet.getRange(`${currentRow+2}:${currentRow+2}`).format.rowHeight = eachInfo.suggestedChartHeight({specialH:specialH});
         let chart = outputSheet.charts.add(Excel.ChartType.lineMarkers,tableSheetForChart.getRange(
           // `${ExcelHelperModule.cellsToAddress([0,1],[0,tInfos.length])},${ExcelHelperModule.cellsToAddress([ithStudent+1,1],[ithStudent+1,tInfos.length])}`
           `${ExcelHelperModule.cellsToAddress([ithStudent+1,1],[ithStudent+1,tInfos.length])}`
-        ));
+        ),Excel.ChartSeriesBy.rows);
+        chart.legend.visible=false;
         chart.setPosition(outputSheet.getCell(currentRow+1,0),outputSheet.getCell(currentRow+1,eachInfo.nWidth-1));
         chart.title.text=grade.name;
         await ctx.sync();
 
-        if(process)await process((ithStudent+1)*100/tInfo.IdArray.length,`輸出ID=${id} 完成`);
+        if(process) await process.next([(ithStudent+1)*100/tInfo.IdArray.length,`輸出ID=${id} 完成`]);
+
         ithStudent++;
       }
 
@@ -621,7 +641,7 @@ export class DataServerService {
         let range = tableSheetForChart.getRange(ExcelHelperModule.cellsToAddress([1,i0+1],[ithStudent+1,i0+1]));
         let cFormat= range.conditionalFormats.add(Excel.ConditionalFormatType.colorScale);
       }
-      // ******************************************** TODO *******************************************
+
       return true;
     }).catch(async err=>{
       this.messageService.add(`data.outputListsIntoWorksheet Error: ${err}`);
@@ -630,7 +650,34 @@ export class DataServerService {
       return false;
     });
   }
-  
+ 
+  async apply1stFormatToAll(sheetName:string,studentNum:number,operator:Subject<[number, string]>):Promise<string>{
+    return await Excel.run(async ctx=>{
+      let sheet = ctx.workbook.worksheets.getItemOrNullObject(sheetName);
+      if(sheet){
+        sheet.load('name');
+        await ctx.sync();
+        if(!sheet.name) return `${sheetName} 不存在，請先產生它`;
+      }
+      let bufRange = sheet.getUsedRange();
+      bufRange.load('rowCount, columnCount');
+      await ctx.sync();
+      let nW = bufRange.columnCount;
+
+      let nH=Math.ceil(bufRange.rowCount/studentNum);;
+      for (let i0 =1; i0 < studentNum; i0++) { 
+          await this.copyFormat(nW,nH,i0,sheet,ctx);
+          await operator.next([(i0+1)*100/studentNum,`完成第${i0+1}位成績`]);
+      }
+      return "";
+    }).catch(async err =>{
+      this.messageService.add(`data.apply1stFormatToAll Error: ${err}`);
+      if(err instanceof OfficeExtension.Error)
+        this.messageService.add(`Debug Info: ${err.debugInfo}`);
+      return err.debugInfo;
+    });
+  }
+
   constructor(private messageService: MessageService) { }
   
 }

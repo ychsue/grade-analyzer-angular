@@ -35,32 +35,39 @@
   <div class="selType"
   (click)='this.currentGen=this.typeOfGen.newCharts'>📈產生新圖表</div>
   <div *ngIf='this.currentGen===this.typeOfGen.newCharts' [@fadeInOut]>
-    <div>比較</div>
-    <mat-form-field class="col2">
-      <mat-select [(ngModel)]="thisTimeGrade" placeholder="這一次">
-          <mat-option *ngFor="let grade of gradesInfo" [value]="grade" (onSelectionChange)="this.updateGrades()">{{grade.thisSheetName}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field class="col2">
-      <mat-select [(ngModel)]="previousTimeGrade" placeholder="前一次">
-        <mat-option *ngFor="let grade of gradesInfo" [value]="grade" (onSelectionChange)="this.updateGrades()">{{grade.thisSheetName}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <div>
-      <span class="col2">作圖哪個成績？</span>
+    <div class="mainSetForChart">
+      <div class="boxLabel">主要</div>
+      <div>比較</div>
       <mat-form-field class="col2">
-        <mat-select [(ngModel)]="chosenGrade" placeholder="成績">
-          <mat-option *ngFor="let grade of grades" [value]="grade">{{grade.name}}</mat-option>
+        <mat-select [(ngModel)]="thisTimeGrade" placeholder="這一次">
+            <mat-option *ngFor="let grade of gradesInfo" [value]="grade" (onSelectionChange)="this.updateGrades()">{{grade.thisSheetName}}</mat-option>
         </mat-select>
       </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field>
-        <input matInput placeholder="輸出圖表的表單名稱" 
-        [value]="this.gsettings.chartSheetName"
-        (input)="this.gsettings.chartSheetName = $event.target.value"/>
+      <mat-form-field class="col2">
+        <mat-select [(ngModel)]="previousTimeGrade" placeholder="前一次">
+          <mat-option *ngFor="let grade of gradesInfo" [value]="grade" (onSelectionChange)="this.updateGrades()">{{grade.thisSheetName}}</mat-option>
+        </mat-select>
       </mat-form-field>
-      <button mat-raised-button (click)="genChartSheet()">輸出</button>
+      <div>
+        <span class="col2">作圖哪個成績？</span>
+        <mat-form-field class="col2">
+          <mat-select [(ngModel)]="chosenGrade" placeholder="成績">
+            <mat-option *ngFor="let grade of grades" [value]="grade">{{grade.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field>
+          <input matInput placeholder="輸出圖表的表單名稱" 
+          [value]="this.gsettings.chartSheetName"
+          (input)="this.gsettings.chartSheetName = $event.target.value"/>
+        </mat-form-field>
+        <button mat-raised-button (click)="genChartSheet()">輸出</button>
+      </div>
+    </div>
+    <div class="detailSetForChart">
+      <div class="boxLabel">視覺化</div>
+      <button mat-raised-button (click)="this.applyFormat()">套用格式</button>
     </div>
   </div>
 </div>

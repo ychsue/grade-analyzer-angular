@@ -28,13 +28,16 @@ export class ForEachStudent {
     public suggestedChartHeight(args:{
         eachCellWH?:[number,number],
         tableWH?:[number,number],
-        separateH?:number
+        separateH?:number,
+        specialH?:number
     }):number{
         let result:number =0;
+        let isTableWHSet =true;
         if(!args.eachCellWH){
             args.eachCellWH = [48,16.2]; // TODO
         }
         if(!args.tableWH){
+            isTableWHSet = false;
             args.tableWH=[
                 args.eachCellWH[0]*this.nWidth,
                 args.eachCellWH[1]*this.nTableRows
@@ -42,6 +45,9 @@ export class ForEachStudent {
         }
         if(!args.separateH){
             args.separateH=args.eachCellWH[1];
+        }
+        if(isTableWHSet===false && args && args.specialH){
+            args.tableWH[1] = args.tableWH[1] -args.eachCellWH[1]+args.specialH;
         }
 
         // Get PageInfo
