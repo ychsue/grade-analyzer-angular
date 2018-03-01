@@ -26,6 +26,9 @@ export class GlobalSettings {
     stSpecial: string;
     nH: number;
 
+    // For Publish
+    isDebugMode:boolean;
+
     constructor (gSettings?: GlobalSettings){
         this.usedTimes =(gSettings)?gSettings.usedTimes: 0;
         this.templateWorksheetName =(gSettings)?gSettings.templateWorksheetName:  "temp_in";
@@ -49,6 +52,8 @@ export class GlobalSettings {
         this.iRowChart   =(gSettings)?gSettings.iRowChart: 9;
         this.nH          =(gSettings)?gSettings.nH:11;
         this.stSpecial   =(gSettings)?gSettings.stSpecial: '家長簽名及意見';
+
+        this.isDebugMode =(gSettings)?gSettings.isDebugMode: false;
         }
 
     isTheSame(compared: GlobalSettings): boolean{

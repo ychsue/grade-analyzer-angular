@@ -4,10 +4,10 @@
       <mat-icon>menu</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
-        <a mat-menu-item routerLink="/test">Test</a>
-        <a mat-menu-item routerLink="/welcome">Welcome</a>
-        <a mat-menu-item routerLink="/generate">Generate</a>
-        <a mat-menu-item routerLink="/settings">Settings</a>
+        <a mat-menu-item routerLink="/test" *ngIf='this.gSettings.isDebugMode'>Test</a>
+        <a mat-menu-item routerLink="/welcome">🎈歡迎</a>
+        <a mat-menu-item routerLink="/generate">📰產生</a>
+        <a mat-menu-item routerLink="/settings">⚙設定</a>
     </mat-menu>
     <span>{{title}}</span>
   </mat-toolbar>

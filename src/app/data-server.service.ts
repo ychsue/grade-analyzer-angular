@@ -33,13 +33,13 @@ export class DataServerService {
     if(!clearOption) clearOption = Excel.ClearApplyTo.all;
     await ctx.sync();
     if(buf){
-      this.messageService.add(`data.clearASheet: ${JSON.stringify(buf)}`);
+      if(this.globalSettings.isDebugMode) this.messageService.add(`data.clearASheet: ${JSON.stringify(buf)}`);
       sheet.load('name');
       buf.load('address');
       sheet.charts.load('items');
       await ctx.sync();
       if(buf.address){
-        this.messageService.add(`data.clearASheet: ${sheet.name}.address=${buf.address}`)
+        if(this.globalSettings.isDebugMode) this.messageService.add(`data.clearASheet: ${sheet.name}.address=${buf.address}`);
         if(buf.address){
           buf.clear(clearOption);
           if(isClearTable) sheet.charts.items.map(x=>x.delete());
@@ -58,7 +58,7 @@ export class DataServerService {
       await ctx.sync();
       if(result.name) isSheetExist =true;
     }
-    this.messageService.add(`private data.openASheet: name=${sheetName} isSheetExist=${isSheetExist}`);
+    if(this.globalSettings.isDebugMode) this.messageService.add(`private data.openASheet: name=${sheetName} isSheetExist=${isSheetExist}`);
     if(isSheetExist===false){
       result = ctx.workbook.worksheets.add(sheetName);
       await ctx.sync();
@@ -102,9 +102,9 @@ export class DataServerService {
       }
     ).catch(
       err => {
-        this.messageService.add('getWorksheetNames Error: ' + err);
+        if(this.globalSettings.isDebugMode) this.messageService.add('getWorksheetNames Error: ' + err);
         if (err instanceof OfficeExtension.Error) {
-          this.messageService.add('Debuf Info: ' + err.debugInfo);
+          if(this.globalSettings.isDebugMode) this.messageService.add('Debuf Info: ' + err.debugInfo);
         }
       }
     );
@@ -121,15 +121,15 @@ export class DataServerService {
           await ctx.sync();
           isExist = (witem.name!==undefined);
         }
-        this.messageService.add("dataServerService.checkWorksheetExistance: "+ isExist);
-        this.messageService.add(`witem:${stSheetName}` + JSON.stringify(witem)+ '  '+witem.name);
+        if(this.globalSettings.isDebugMode) this.messageService.add("dataServerService.checkWorksheetExistance: "+ isExist);
+        if(this.globalSettings.isDebugMode) this.messageService.add(`witem:${stSheetName}` + JSON.stringify(witem)+ '  '+witem.name);
         return await ctx.sync(isExist);
       }
     ).catch(
       err => {
-        this.messageService.add("checkWorksheetExistance Error: " + err);
+        if(this.globalSettings.isDebugMode) this.messageService.add("checkWorksheetExistance Error: " + err);
         if(err instanceof OfficeExtension.Error)
-        this.messageService.add("Debug Info: " + err.debugInfo);
+        if(this.globalSettings.isDebugMode) this.messageService.add("Debug Info: " + err.debugInfo);
         return false;
       }
     );
@@ -147,7 +147,7 @@ export class DataServerService {
     let keys = Object.keys(this.globalSettings);
     let result =oSettings.get(keys[0]);
     if(result === null){
-      this.messageService.add(`initializeSettingsAsync: ${keys[0]}: ${result}`);
+      if(this.globalSettings.isDebugMode) this.messageService.add(`initializeSettingsAsync: ${keys[0]}: ${result}`);
       result = false;
     }else{
       result = true;
@@ -197,7 +197,7 @@ export class DataServerService {
         const element = this.globalSettings[key];
         if(element != null){
           oSettings.set(key,element);
-          this.messageService.add("DataServerService.updateSettingsToServer:"+key+":" + element);
+          if(this.globalSettings.isDebugMode) this.messageService.add("DataServerService.updateSettingsToServer:"+key+":" + element);
         }
       }
     }
@@ -261,9 +261,9 @@ export class DataServerService {
         }
       ).catch(
         err => {
-          this.messageService.add('createTempInSheet error: '+err);
+          if(this.globalSettings.isDebugMode) this.messageService.add('createTempInSheet error: '+err);
           if(err instanceof OfficeExtension.Error)
-          this.messageService.add('Debug Info: '+err.debugInfo);
+          if(this.globalSettings.isDebugMode) this.messageService.add('Debug Info: '+err.debugInfo);
           return false;
         }
       );
@@ -276,12 +276,12 @@ export class DataServerService {
     * @param  {string} dName?  : Destinating Worksheet name. If it is null, its name will be ${sName}_copy
     * @returns Promise<boolean>
     */
-    async duplicateASheet(sName: string, dName?: string, yearSemTimes?: IYearSemTimes): Promise<boolean>{
+    async duplicateASheet(sName: string, dName?: string, yearSemTimes?: IYearSemTimes): Promise<string>{
       let run = await Excel.run(
         async ctx =>{
           // * [2018-02-07 19:18] Check whether the worksheet 'sName' does exist.
           const isSourceExist = await this.checkWorksheetExistance(sName);
-          if(isSourceExist===false) return false;
+          if(isSourceExist===false) return `表單${sName}不存在，請到<b>設定</b>先創造它出來吧。`;
           // * [2018-02-07 19:20] add the destinate worksheet
           dName = (dName)?dName:(sName+'_copy');
           let dWorksheet = ctx.workbook.worksheets.add(dName);
@@ -291,7 +291,7 @@ export class DataServerService {
           var range = sWorksheet.getUsedRange();
           range.load('address, formulas');
           await ctx.sync();
-          this.messageService.add("DEBUG range.address:"+range.address);
+          if(this.globalSettings.isDebugMode) this.messageService.add("DEBUG range.address:"+range.address);
           var newAddress = range.address.substring(range.address.indexOf('!')+1);
           var dRange = dWorksheet.getRange(newAddress);
           dRange.formulas = range.formulas;
@@ -303,7 +303,7 @@ export class DataServerService {
             let oRange = item.getRange();
             oRange.load('address');
             await ctx.sync();
-            this.messageService.add("DEBUG address:"+oRange.address);
+            if(this.globalSettings.isDebugMode) this.messageService.add("DEBUG address:"+oRange.address);
             dWorksheet.tables.add(
               oRange.address.substring(oRange.address.indexOf('!')+1)
               , true
@@ -325,10 +325,10 @@ export class DataServerService {
         await ctx.sync();
         // * [2018-02-11 15:46] Get startRow, endRow, startColumn, endColumn, Total, Avg, Grade, CAvg, CHighest and CLowest, respectively.
         let cInfos = await this.getMainCellsInfo(ctx, dWorksheet);
-        this.messageService.add('cInfos: '+JSON.stringify(cInfos));
+        if(this.globalSettings.isDebugMode) this.messageService.add('cInfos: '+JSON.stringify(cInfos));
         let icForScore =(cInfos.total)?cInfos.total[1]:((cInfos.avg)?cInfos.avg[1]:-1);
         let addressForScore = ExcelHelperModule.cellsToAddress([cInfos.courseBound.from[0],icForScore],[cInfos.courseBound.to[0],icForScore],[true,false]);
-        this.messageService.add("addressForScore:"+addressForScore);
+        if(this.globalSettings.isDebugMode) this.messageService.add("addressForScore:"+addressForScore);
         // * [2018-02-13 16:28] Write formulas for Total & Avg & score
         for(let ir0 = cInfos.courseBound.from[0]; ir0 <= cInfos.courseBound.to[0]; ir0++){
           let bufAddress = ExcelHelperModule.cellsToAddress([ir0,cInfos.courseBound.from[1]], [ir0,cInfos.courseBound.to[1]]);
@@ -351,14 +351,14 @@ export class DataServerService {
         }
         if(cInfos.total) this.fillFormulasCAvgEtc(dWorksheet,cInfos,{rc: cInfos.total});
         if(cInfos.avg) this.fillFormulasCAvgEtc(dWorksheet,cInfos,{rc: cInfos.avg});
-        
-        return await ctx.sync(true);
+        await ctx.sync();
+        return '';
       }
     ).catch( async err => {
-      this.messageService.add(`DataServerService.duplicateASheet: Error`+err);
+      if(this.globalSettings.isDebugMode) this.messageService.add(`DataServerService.duplicateASheet: Error`+err);
       if(err instanceof OfficeExtension.Error)
-      this.messageService.add('Debug Info: '+err.debugInfo);
-      return false;
+      if(this.globalSettings.isDebugMode) this.messageService.add('Debug Info: '+err.debugInfo);
+      return JSON.stringify(err);
     });
     return run;
   }
@@ -455,21 +455,21 @@ export class DataServerService {
         await ctx.sync();
         if(!sortedWords) sortedWords = this.globalSettings.getSortedMagicWords();
         if(!stRegexp) stRegexp = this.globalSettings.getRegExpPattern();
-        this.messageService.add(`DataServer.getGradesheets: ${worksheet.name}`);
+        if(this.globalSettings.isDebugMode) this.messageService.add(`DataServer.getGradesheets: ${worksheet.name}`);
         let yst = this.globalSettings.parseYearSemTimes(worksheet.name,stRegexp,sortedWords);
         if(yst){
-          this.messageService.add(`DataServer.getGradesheets: ${JSON.stringify(yst)}`);
+          if(this.globalSettings.isDebugMode) this.messageService.add(`DataServer.getGradesheets: ${JSON.stringify(yst)}`);
           let info = await this.getMainCellsInfo(ctx, worksheet);
-          this.messageService.add(`DataServer.getGradesheets.info: ${JSON.stringify(info)}`);
+          if(this.globalSettings.isDebugMode) this.messageService.add(`DataServer.getGradesheets.info: ${JSON.stringify(info)}`);
           info.YearSemTimes = yst;
           gradesheets.push(info);          
         }
       }
       return gradesheets;
     }).catch( async err =>{
-      this.messageService.add('getWorksheets Error: '+err);
+      if(this.globalSettings.isDebugMode) this.messageService.add('getWorksheets Error: '+err);
       if (err instanceof OfficeExtension.Error)
-      this.messageService.add('Debug Info:' + err.debugInfo);
+      if(this.globalSettings.isDebugMode) this.messageService.add('Debug Info:' + err.debugInfo);
       return [];
     });
   }
@@ -671,9 +671,9 @@ export class DataServerService {
 
       return true;
     }).catch(async err=>{
-      this.messageService.add(`data.outputListsIntoWorksheet Error: ${err}`);
+      if(this.globalSettings.isDebugMode) this.messageService.add(`data.outputListsIntoWorksheet Error: ${err}`);
       if(err instanceof OfficeExtension.Error)
-      this.messageService.add(`Debug Info: ${err.debugInfo}`);
+      if(this.globalSettings.isDebugMode) this.messageService.add(`Debug Info: ${err.debugInfo}`);
       return false;
     });
   }
@@ -699,9 +699,9 @@ export class DataServerService {
       }
       return "";
     }).catch(async err =>{
-      this.messageService.add(`data.apply1stFormatToAll Error: ${err}`);
+      if(this.globalSettings.isDebugMode) this.messageService.add(`data.apply1stFormatToAll Error: ${err}`);
       if(err instanceof OfficeExtension.Error)
-        this.messageService.add(`Debug Info: ${err.debugInfo}`);
+      if(this.globalSettings.isDebugMode) this.messageService.add(`Debug Info: ${err.debugInfo}`);
       return err.debugInfo;
     });
   }
@@ -714,9 +714,9 @@ export class DataServerService {
       else range.values = value;
       await ctx.sync();
     }).catch(async err=>{
-      this.messageService.add(`data.inputValuesIntoARange Error: ${err}`);
+      if(this.globalSettings.isDebugMode) this.messageService.add(`data.inputValuesIntoARange Error: ${err}`);
       if(err instanceof OfficeExtension.Error){
-        this.messageService.add(`Debug Info: ${err.debugInfo}`);
+        if(this.globalSettings.isDebugMode) this.messageService.add(`Debug Info: ${err.debugInfo}`);
       }
     });
   }
@@ -745,9 +745,9 @@ export class DataServerService {
         await ctx.sync();
       }
     }).catch(async err =>{
-      this.messageService.add(`data.apply1stRowHeight2Whole Error: ${err}`);
+      if(this.globalSettings.isDebugMode) this.messageService.add(`data.apply1stRowHeight2Whole Error: ${err}`);
       if(err instanceof OfficeExtension.Error){
-        this.messageService.add(`Debug Info: ${err.debugInfo}`);
+        if(this.globalSettings.isDebugMode) this.messageService.add(`Debug Info: ${err.debugInfo}`);
       }
     });
   }

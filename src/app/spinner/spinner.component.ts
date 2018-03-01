@@ -7,7 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class SpinnerComponent implements OnInit {
   static modeStrings:{det:string,indet:string}={det:"determinate",indet:"indeterminate"};
-
+  modeStrings = SpinnerComponent.modeStrings;
   @Input()
   title: string = "Hello";
   @Input()
