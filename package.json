@@ -5,7 +5,7 @@
   "scripts": {
     "validate": "./node_modules/.bin/validate-office-addin",
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --ssl 1 --ssl-key certs/server.key --ssl-cert certs/server.crt --port 3000",
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
