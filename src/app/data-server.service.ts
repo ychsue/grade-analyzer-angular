@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { MessageService } from './message.service';
 import { GlobalSettings } from './global-settings';
 import { forEach } from '@angular/router/src/utils/collection';
@@ -10,7 +10,7 @@ import { Subject } from "rxjs/Subject";
 
 @Injectable()
 export class DataServerService {
-  async copyFormat(nWidth:number,nHeight:number,ithStudent:number,sheet:Excel.Worksheet,ctx: Excel.RequestContext): Promise<void> {
+  async copyFormat(nWidth:number,nHeight:number,ithStudent:number,sheet:Excel.Worksheet,ctx: Excel.RequestContext,operator?:Subject<[number,string]>): Promise<void> {
     for (let iW = 0; iW < nWidth;  iW++) {
       for (let iH = 0; iH < nHeight; iH++) {
         let sCell = sheet.getCell(iH,iW);
@@ -23,6 +23,9 @@ export class DataServerService {
         }
         await ctx.sync();
       }  
+      this.zone.run(()=>{
+        operator.next([(iW+1)*100/nWidth,`完成第${ithStudent+1}學生的第${iW+1}列的套用`]);
+      });
     }
   }
   async clearASheet(ctx: Excel.RequestContext,sheet: Excel.Worksheet,clearOption?:string,isClearTable:boolean=true): Promise<void> {
@@ -489,6 +492,11 @@ export class DataServerService {
       let allSheets:{info:ImainCellsInfo,ids:string[]}[]=[];
       // * [2018-02-26 11:41] Initialize for-each-student
       let eachInfo = new ForEachStudent(tInfo,2,1,1);
+      // * [2018-02-28 17:39] Update globalSettings
+      this.globalSettings.iRowChart=eachInfo.nTableRows-1;
+      this.globalSettings.iRowSpecial=eachInfo.nTableRows-2;
+      this.globalSettings.nH=eachInfo.nTotalRows;
+      this.updateSettingsToServer();
       // * [2018-02-27 11:47] Output table head into tableSheetForChart
       let titles:string[] = [`成績表單➡\nID⬇`];
       tInfos.reduce((pre,cur)=>{pre.push(cur.thisSheetName); return pre;},titles);
@@ -545,12 +553,14 @@ export class DataServerService {
         let currentRow = topTableRow; //Initialize it
         let currentColumn =0;
         currentRow +=2;
-        outputSheet.getCell(currentRow++,0).values=[[this.globalSettings.stCAvg]];
-        outputSheet.getCell(currentRow++,0).values=[[this.globalSettings.stCHighest]];
-        outputSheet.getCell(currentRow++,0).values=[[this.globalSettings.stCLowest]];
-        outputSheet.getCell(currentRow++,0).values=[[`比較：${pInfo.thisSheetName}`]];
-        outputSheet.getCell(currentRow++,0).values=[[`家長簽名及意見`]];
-        
+        let bufRange = outputSheet.getRange(ExcelHelperModule.cellsToAddress([currentRow,0],[currentRow+4,0]));
+        bufRange.values =[
+          [this.globalSettings.stCAvg],
+          [this.globalSettings.stCHighest],
+          [this.globalSettings.stCLowest],
+          [`比較：${pInfo.thisSheetName}`],
+          [this.globalSettings.stSpecial]
+        ];
         currentRow = topTableRow; //Initialize it
         if(tInfo.id){
           outputSheet.getCell(currentRow++,currentColumn).values=[[this.globalSettings.stID]];
@@ -631,7 +641,24 @@ export class DataServerService {
         chart.title.text=grade.name;
         await ctx.sync();
 
-        if(process) await process.next([(ithStudent+1)*100/tInfo.IdArray.length,`輸出ID=${id} 完成`]);
+        // * [2018-03-01 12:13] Draw borders
+        bufRange = outputSheet.getRange(ExcelHelperModule.cellsToAddress([topTableRow,0],[topTableRow+eachInfo.nTableRows-eachInfo.nHSeparate-eachInfo.nHHead-1,eachInfo.nWidth-1]));
+        bufRange.format.borders.getItem(Excel.BorderIndex.edgeLeft).style = Excel.BorderLineStyle.continuous;
+        bufRange.format.borders.getItem(Excel.BorderIndex.edgeRight).style = Excel.BorderLineStyle.continuous;
+        bufRange.format.borders.getItem(Excel.BorderIndex.edgeBottom).style = Excel.BorderLineStyle.continuous;
+        bufRange.format.borders.getItem(Excel.BorderIndex.edgeTop).style = Excel.BorderLineStyle.continuous;        
+        bufRange.format.borders.getItem(Excel.BorderIndex.insideHorizontal).style = Excel.BorderLineStyle.continuous;
+        bufRange.format.borders.getItem(Excel.BorderIndex.insideVertical).style = Excel.BorderLineStyle.continuous;
+        // * [2018-03-01 12:35] Color the title
+        bufRange = outputSheet.getRange(ExcelHelperModule.cellsToAddress([topTableRow,0],[topTableRow,eachInfo.nWidth-1]));
+        bufRange.format.font.bold=true;
+        bufRange.format.fill.color='#ffff00';
+        // * [2018-03-01 12:36] Borders for Special one
+        let iSpec = this.globalSettings.iRowSpecial+ithStudent*this.globalSettings.nH;
+        bufRange = outputSheet.getRange(ExcelHelperModule.cellsToAddress([iSpec,2],[iSpec,eachInfo.nWidth-1]));
+        bufRange.format.borders.getItem(Excel.BorderIndex.insideVertical).style = Excel.BorderLineStyle.none;
+
+        if(process) this.zone.run(()=>{ process.next([(ithStudent+1)*100/tInfo.IdArray.length,`輸出ID=${id} 完成`]);});
 
         ithStudent++;
       }
@@ -666,8 +693,9 @@ export class DataServerService {
 
       let nH=Math.ceil(bufRange.rowCount/studentNum);;
       for (let i0 =1; i0 < studentNum; i0++) { 
-          await this.copyFormat(nW,nH,i0,sheet,ctx);
-          await operator.next([(i0+1)*100/studentNum,`完成第${i0+1}位成績`]);
+          await this.copyFormat(nW,nH,i0,sheet,ctx,operator);
+          this.zone.run(
+          ()=>{operator.next([(i0+1)*100/studentNum,`完成第${i0+1}位成績`]);});
       }
       return "";
     }).catch(async err =>{
@@ -678,7 +706,53 @@ export class DataServerService {
     });
   }
 
-  constructor(private messageService: MessageService) { }
+  async inputValuesIntoARange(sheetName:string,address:{from:[number,number],to?:[number,number]},value:string[][],isFormula:boolean=false){
+    return await Excel.run(async ctx =>{
+      let sheet = await this.openASheet(ctx,sheetName);
+      let range = sheet.getRange(ExcelHelperModule.cellsToAddress(address.from,address.to));
+      if(isFormula) range.formulas =value;
+      else range.values = value;
+      await ctx.sync();
+    }).catch(async err=>{
+      this.messageService.add(`data.inputValuesIntoARange Error: ${err}`);
+      if(err instanceof OfficeExtension.Error){
+        this.messageService.add(`Debug Info: ${err.debugInfo}`);
+      }
+    });
+  }
+
+  async apply1stRowHeight2Whole(sheetName:string,nRows:number,operator?:Subject<[number,string]>):Promise<void>{
+    return await Excel.run(async ctx=>{
+      let sheet = await this.openASheet(ctx, sheetName);
+      // * [2018-03-01 10:49] Get number of all Rows
+      let range = sheet.getUsedRange();
+      range.load('rowCount');
+      await ctx.sync();
+      let nTotal = range.rowCount;
+      // * [2018-03-01 10:50] Scan for all rows
+      for (let iRow = 0; iRow < nRows; iRow++) {
+        this.zone.run(()=>{
+          if(operator) operator.next([100*(iRow+1)/nRows,`套用第 ${iRow+1} Row中`]);
+        });
+        let oRow = sheet.getCell(iRow,iRow);
+        oRow.load(`format/rowHeight`);
+        await ctx.sync();
+        let height = oRow.format.rowHeight;
+        for (let iStu=0; iStu<nTotal/nRows;iStu++){
+          let newRow = sheet.getCell(iStu*nRows+iRow,0);
+          newRow.format.rowHeight = height;
+        }
+        await ctx.sync();
+      }
+    }).catch(async err =>{
+      this.messageService.add(`data.apply1stRowHeight2Whole Error: ${err}`);
+      if(err instanceof OfficeExtension.Error){
+        this.messageService.add(`Debug Info: ${err.debugInfo}`);
+      }
+    });
+  }
+
+  constructor(private messageService: MessageService, private zone:NgZone) { }
   
 }
 

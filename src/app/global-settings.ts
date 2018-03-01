@@ -21,6 +21,10 @@ export class GlobalSettings {
 
     //For Sheet of Charts
     chartSheetName: string;
+    iRowSpecial: number;
+    iRowChart: number;
+    stSpecial: string;
+    nH: number;
 
     constructor (gSettings?: GlobalSettings){
         this.usedTimes =(gSettings)?gSettings.usedTimes: 0;
@@ -41,7 +45,11 @@ export class GlobalSettings {
         this.new_times =(gSettings)?gSettings.new_times:'1';
 
         this.chartSheetName =(gSettings)?gSettings.chartSheetName:'學生列表';
-    }
+        this.iRowSpecial =(gSettings)?gSettings.iRowSpecial: 8;
+        this.iRowChart   =(gSettings)?gSettings.iRowChart: 9;
+        this.nH          =(gSettings)?gSettings.nH:11;
+        this.stSpecial   =(gSettings)?gSettings.stSpecial: '家長簽名及意見';
+        }
 
     isTheSame(compared: GlobalSettings): boolean{
         let iB = true;

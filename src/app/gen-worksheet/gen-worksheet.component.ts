@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { trigger, transition, animate, style, state } from "@angular/animations";
 import { MessageService } from '../message.service';
 import { DataServerService, ImainCellsInfo } from '../data-server.service';
@@ -6,6 +6,8 @@ import { GlobalSettings } from '../global-settings';
 import { AppComponent } from '../app.component';
 import { DialogComponent, dialogData } from '../dialog/dialog.component';
 import { Subject } from 'rxjs/Subject';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 @Component({
   selector: 'app-gen-worksheet',
@@ -181,6 +183,11 @@ export class GenWorksheetComponent implements OnInit {
   }
   //#endregion 2. Generate New Chart Sheet
 
+  _tmpStSpecialSubject:Subject<string> = new Subject<string>();
+  async updateStSpecial(stSpecial:string){
+    this._tmpStSpecialSubject.next(stSpecial.trim());
+  }
+  
   async applyFormat():Promise<void>{
     let operator = new Subject<[number, string]>();
     operator.subscribe(value=>{
@@ -192,18 +199,62 @@ export class GenWorksheetComponent implements OnInit {
     this.appComponent.setOfSpinner ={title:"完成",message:'Done',isActivate:false,mode:"indeterminate",value:0};
     operator.complete();
     if(msg){
-      let data:dialogData ={
-        title: `表單 ${this.gsettings.chartSheetName} 可能不存在`,
-        message: `${msg}`,
-        buttons: [{action: ref=>{ref.close();}, text:"了解了"}]
-      };
-      this.appComponent.dialog.open(DialogComponent,{data: data});
+      this.showDialogChartSheetDoesNotExist(msg);
     }
   }
-  constructor(private messageService:MessageService, private dataServerService: DataServerService, private appComponent: AppComponent) { }
+
+  async applyRowHeight():Promise<void>{
+    let operator = new Subject<[number,string]>();
+    operator.subscribe(x=>{
+      this.appComponent.setOfSpinner = {title:`套用列高中`,message:x[1],isActivate:true,mode:SpinnerComponent.modeStrings.det,value:x[0]};
+    });
+    await this.dataServerService.apply1stRowHeight2Whole(this.gsettings.chartSheetName,this.gsettings.nH,operator);
+    operator.complete();
+    this.appComponent.setOfSpinner = {title:`Done`,message:'Done',isActivate:false,mode:SpinnerComponent.modeStrings.indet,value:30};
+  }
+
+  showDialogChartSheetDoesNotExist(msg:string){
+    let data:dialogData ={
+      title: `表單 <b>${this.gsettings.chartSheetName}</b> <br/>可能不存在`,
+      message: `${msg}`,
+      buttons: [{action: ref=>{ref.close();}, text:"了解了"}]
+    };
+    this.appComponent.dialog.open(DialogComponent,{data: data});
+  }
+
+  async updateSpecialWords(){
+    let isExist = await this.dataServerService.checkWorksheetExistance(this.gsettings.chartSheetName);
+    if (isExist===false){
+      this.showDialogChartSheetDoesNotExist(`${this.gsettings.chartSheetName} 表單不存在`);
+      return;
+    }
+    // * [2018-02-28 18:39] Get student numbers
+    let nStudents = this.thisTimeGrade.IdArray.length;
+    for (let i0 = 0; i0 < nStudents; i0++) {
+      this.zone.run(()=>{
+        this.appComponent.setOfSpinner = {title:`套用至第${i0+1}學生`,message:`套用中`,isActivate:true};
+      });
+      await this.dataServerService.inputValuesIntoARange(this.gsettings.chartSheetName,{
+        from:[this.gsettings.iRowSpecial+i0*this.gsettings.nH,0] // TODO
+      },
+      [[this.gsettings.stSpecial]]);  // TODO
+    }
+    this.zone.run(()=>{
+      this.appComponent.setOfSpinner = {title:`Done`,message:`Finish`,isActivate:false};
+    });
+  }
+
+  constructor(private messageService:MessageService, private dataServerService: DataServerService, private appComponent: AppComponent, private zone: NgZone) { }
 
   ngOnInit() {
     this.updateNewSheetName();
+    this._tmpStSpecialSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(async st=>{
+      this.gsettings.stSpecial=st;
+      await this.dataServerService.updateSettingsToServer();
+    });
   }
 
 }

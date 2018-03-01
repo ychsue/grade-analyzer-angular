@@ -40,7 +40,7 @@
       <div>比較</div>
       <mat-form-field class="col2">
         <mat-select [(ngModel)]="thisTimeGrade" placeholder="這一次">
-            <mat-option *ngFor="let grade of gradesInfo" [value]="grade" (onSelectionChange)="this.updateGrades()">{{grade.thisSheetName}}</mat-option>
+          <mat-option *ngFor="let grade of gradesInfo" [value]="grade" (onSelectionChange)="this.updateGrades()">{{grade.thisSheetName}}</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field class="col2">
@@ -67,7 +67,27 @@
     </div>
     <div class="detailSetForChart">
       <div class="boxLabel">視覺化</div>
-      <button mat-raised-button (click)="this.applyFormat()">套用格式</button>
+      <div>
+        <mat-form-field class="col2">
+          <input matInput placeholder="特殊欄位文字"
+          [value]="this.gsettings.stSpecial"
+          (input)="this.updateStSpecial($event.target.value)"/>
+        </mat-form-field>
+        <button mat-raised-button (click)="this.updateSpecialWords()" class="col2">套用此文字</button>
+      </div>
+      <div class="detailSetForChart">
+        <div>
+          <span>使用以下的按鈕前，請先對表單
+            <div class="chartSheetName">{{this.gsettings.chartSheetName}}</div>
+            裡的第一位學生的表格進行設定，如寬、高、字體、顏色等，但<br/>
+          <b>請不要刪減任何欄或列</b></span></div>
+          <button mat-raised-button (click)="this.applyRowHeight()" class="col2 col2-1">僅套用列高</button>
+          <button mat-raised-button (click)="this.applyFormat()" class="col2 col2-2">套用全部(慢)</button>
+          <div class="note">注意：格線其實也可套用，不過，在畫自己想要的格線前，請先將預設的所有格線洗掉後再重新開始畫格線。<br/>
+            怎麼一次全洗掉？很簡單。只要<b>全選</b>整個表格，然後選<b>無格線</b>即可。
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+  

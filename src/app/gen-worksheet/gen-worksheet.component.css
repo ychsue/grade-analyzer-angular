@@ -37,6 +37,7 @@
     border: blue solid;
     border-radius: 4px;
     box-shadow: gray 4px 4px 4px;
+    padding: 4px;
 }
 
 .boxLabel{
@@ -45,4 +46,29 @@
     opacity: 0.8;
     position: relative;
     top: -4px;
+}
+
+.chartSheetName{
+    text-align: center;
+    font-weight: bolder;
+    color: blue;
+    text-shadow: gray 4px 4px 4px;
+    font-size: large;
+}
+
+.col2-1{
+    display: inline-flex;
+    left:0;
+}
+
+.col2-2{
+    display: inline-flex;
+    position: absolute;
+    left:50%;
+}
+
+.note{
+    font-size: small;
+    background: pink;
+    margin: 4px;
 }
