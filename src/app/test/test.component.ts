@@ -164,7 +164,7 @@ isSet(){
   this.dataServerService.isSet();
 }
 
-showWindowConfirm(message: string){
+showWindowConfirm(message?: string){
   window.confirm(message || 'Is it OK?');
 }
 
