@@ -1,3 +1,4 @@
+* [2018-03-03 Sat] Submit to AppSource. 
 
 * [2018-01-09 Tue] Install *@angular/cli*, *yo* and *@types/office-js*
   1. Following the tutorial shown in [[https://docs.microsoft.com/en-us/office/dev/add-ins/quickstarts/excel-quickstart-angular][Quick Start]], [[https://docs.microsoft.com/en-us/office/dev/add-ins/develop/add-ins-with-angular2][Develop Add-in]] and [[https://docs.microsoft.com/en-us/office/dev/add-ins/testing/create-a-network-shared-folder-catalog-for-task-pane-and-content-add-ins][How to sideload]]. Be careful, ~</br>~ will cause an error. It should be ~<br/>~.

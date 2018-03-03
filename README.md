@@ -1,27 +1,22 @@
-# ExcelWebAppAngular1
+# Introduction 簡介
+This program is hosted at https://classgradeanalyzer.azurewebsites.net
+on which you will see an Angular SPA when you surf.
+Then, you will find that some of its buttons do not function because it is an *Office App*.
+It means that it only functions correctly in Excel. 
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.3.
+Therefore, please load it from Excel Add-in and it will show up as a Task Pane.
 
-## Development server
+# Installation 安裝
+If you want to run it on your local machine, you need to install
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+1. VS Code
+2. node
 
-## Code scaffolding
+Then get into this repository and click C-S-B to execute this program and it will hold a server at https://localhost:3000.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Then, how to let your Excel you want to side-load an add-in?
+Please following the tutorial shown in https://docs.microsoft.com/en-us/office/dev/add-ins/quickstarts/excel-quickstart-angular
 
-## Build
+Good luck!
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+One more thing, the file ...-local.xml is for executing the add-in from your local machine.

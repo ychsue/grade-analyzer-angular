@@ -16,7 +16,7 @@
   <ProviderName>Young-Chung Hsue</ProviderName>
   <DefaultLocale>zh-TW</DefaultLocale>
   <!-- The display name of your add-in. Used on the store and various places of the Office UI such as the add-ins dialog. -->
-  <DisplayName DefaultValue="班級成績管理小幫手" />
+  <DisplayName DefaultValue="班級成績管理小幫手Local" />
   <!-- <Description DefaultValue="[Workbook Add-in description]"/> -->
   <Description DefaultValue="每次在輸入班級的成績後，透過這個小幫手，可以產生給每位家長的子圖表，也會提供老師一個所有學生長期學習趨勢的表單。"/>
 
