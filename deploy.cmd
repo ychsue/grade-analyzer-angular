@@ -106,7 +106,7 @@ IF EXIST "%DEPLOYMENT_TARGET%\package.json" (
   popd
 )
 
-;; 4. Angular production build  //Gotten from https://poychang.github.io/deploy-angular-to-azure-app-service/
+:: 4. Angular production build  //Gotten from https://poychang.github.io/deploy-angular-to-azure-app-service/
 IF EXIST "%DEPLOYMENT_TARGET%\.angular-cli.json" (
   pushd "%DEPLOYMENT_TARGET%"
   call :ExecuteCmd !NPM_CMD! run build
