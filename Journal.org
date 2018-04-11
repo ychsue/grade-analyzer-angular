@@ -1,3 +1,15 @@
+* [2018-4-11 Wed] Now, it can work with multilingual.
+After installing ~i18n-page-texts~ 
+, writing a provider ~page-texts.service.ts~
+and subscribing its observable from ~app.component.ts~,
+I can update its sentences with different languages.
+
+The bash command sample is shown below.
+#+begin_src sh
+npm run i18n
+;; do some modifications in assets/i18n/...
+ng serve
+#+end_src
 * [2018-03-03 Sat] Submit to AppSource. 
 
 * [2018-01-09 Tue] Install *@angular/cli*, *yo* and *@types/office-js*

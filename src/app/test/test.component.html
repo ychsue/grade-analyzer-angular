@@ -43,6 +43,11 @@
   <button (click)="clearAsheet(gradeSheetName.value)">ClearASheet</button>
   <button (click)="testPageInfo()">testPageInfo</button>
 </div>
+<div>
+  <button (click)="updatePageTexts('zh')">zh</button>
+  <button (click)="updatePageTexts('en')" >en</button>
+  <div>{{this.app.pts?.TestPage.test||"你好嗎?"}}</div>
+</div>
 <ul>
   <li *ngFor="let message of messageService.messages">
     {{message}}

@@ -1,0 +1,9 @@
+{
+  "welcomePage": {
+    "setup": "setup",
+    "welcomeIntro": "You are welcome to use this helper. This helper can help you to output your students' scores {0} according to individual students {1}, and you can also see the long-term learning trends of all students {2}. Usage is very simple, currently only <b>setting</b> and <b>generating</b> these two functions. Source code at {3}"
+  },
+  "TestPage": {
+    "test": "test"
+  }
+}

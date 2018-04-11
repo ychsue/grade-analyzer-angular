@@ -10,6 +10,15 @@
         <a mat-menu-item routerLink="/settings">⚙設定</a>
     </mat-menu>
     <span>{{title}}</span>
+
+    <button mat-icon-button [matMenuTriggerFor]="langMenu" class="right">
+      <mat-icon class="mat-18">translate</mat-icon>
+    </button>    
+    <mat-menu #langMenu="matMenu">
+        <button mat-menu-item *ngFor="let item of ptsService.langList" (click)="updateLang(item.isoCode)">
+            {{item.name}}
+        </button>
+    </mat-menu>
   </mat-toolbar>
   
   <div id="content-main">

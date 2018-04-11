@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { MessageService } from '../message.service';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { DataServerService, ImainCellsInfo } from '../data-server.service';
@@ -8,6 +8,7 @@ import { DialogComponent, dialogData } from '../dialog/dialog.component';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { PageInfo } from '../page-info';
 import { ForEachStudent } from '../gen-worksheet/for-each-student';
+import { PageTextsService } from '../page-texts.service';
 
 @Component({
   selector: 'app-test',
@@ -15,7 +16,7 @@ import { ForEachStudent } from '../gen-worksheet/for-each-student';
   styleUrls: ['./test.component.css']
 })
 export class TestComponent implements OnInit {
-  
+
   /**
   * You can use it to create a table for tutorial
   * Gotten from https://docs.microsoft.com/en-us/office/dev/add-ins/tutorials/excel-tutorial-create-table
@@ -169,11 +170,11 @@ showWindowConfirm(message?: string){
 }
 
 changeAppTitle(){
-  this.appComponent.title = Date();
+  this.app.title = Date();
 }
 
 showSpinner(){
-  let setOfSpinner = this.appComponent.setOfSpinner;
+  let setOfSpinner = this.app.setOfSpinner;
   setOfSpinner.isActivate = true;
   setOfSpinner.title = "測試";
   setOfSpinner.message = Date();
@@ -202,7 +203,7 @@ showDialog(){
 
     ]
   };
-  let dialogRef = this.appComponent.dialog.open(
+  let dialogRef = this.app.dialog.open(
     DialogComponent,
     {
       data: data
@@ -233,18 +234,18 @@ checkExistanceOfTempSheet(){
 }
 
 genTempIn(): void {
-  this.appComponent.setOfSpinner = {isActivate: true, title: '創建樣板中', message: '請稍候'};
+  this.app.setOfSpinner = {isActivate: true, title: '創建樣板中', message: '請稍候'};
   this.dataServerService.createTempInSheet(this.dataServerService.globalSettings).then(
    (iB) => {
       this.messageService.add(`settingsComponent.genTempIn:after createTempInSheet`);
-      this.appComponent.setOfSpinner = {isActivate: false, title: '進行中', message: '請稍候'};
+      this.app.setOfSpinner = {isActivate: false, title: '進行中', message: '請稍候'};
       return iB;
     }
   );
   
   setTimeout(() => {
-    if(this.appComponent.setOfSpinner.isActivate===true)
-      this.appComponent.setOfSpinner = {isActivate: false, title: '進行中', message: '請稍候'};  
+    if(this.app.setOfSpinner.isActivate===true)
+      this.app.setOfSpinner = {isActivate: false, title: '進行中', message: '請稍候'};  
   }, 10000);
 
 }
@@ -293,8 +294,13 @@ testPageInfo(){
   this.messageService.add('Height='+eachInfo.suggestedChartHeight({}));
 }
 
+updatePageTexts(isoCode:string){
+  console.log(isoCode);
+  this.app.ptsService.updatePageTexts(isoCode);
+}
+
 constructor(public messageService: MessageService, private dataServerService:DataServerService,
-  private appComponent:AppComponent) { }
+  public app:AppComponent) { }
   
   ngOnInit() {
     this.messageService.add("TestComponent.ngOnInit");

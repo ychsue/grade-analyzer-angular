@@ -15,6 +15,8 @@ import { SpinnerComponent } from './spinner/spinner.component';
 import { FormsModule } from '@angular/forms';
 import { ExcelHelperModule } from './excel-helper/excel-helper.module';
 import { GenWorksheetComponent } from './gen-worksheet/gen-worksheet.component';
+import { PageTextsService } from './page-texts.service';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -40,10 +42,11 @@ import { GenWorksheetComponent } from './gen-worksheet/gen-worksheet.component';
     MatIconModule,
     MatToolbarModule,
     BrowserAnimationsModule,
-    ExcelHelperModule
+    ExcelHelperModule,
+    HttpClientModule
   ],
   entryComponents:[AppComponent,DialogComponent],
-  providers: [MessageService, DataServerService],
+  providers: [MessageService, DataServerService, PageTextsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
