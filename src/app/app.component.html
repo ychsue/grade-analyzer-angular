@@ -5,11 +5,11 @@
     </button>
     <mat-menu #menu="matMenu">
         <a mat-menu-item routerLink="/test" *ngIf='this.gSettings.isDebugMode'>Test</a>
-        <a mat-menu-item routerLink="/welcome">🎈歡迎</a>
-        <a mat-menu-item routerLink="/generate">📰產生</a>
-        <a mat-menu-item routerLink="/settings">⚙設定</a>
+        <a mat-menu-item routerLink="/welcome">🎈{{pts?.appPage.welcome||"歡迎"}}</a>
+        <a mat-menu-item routerLink="/generate">📰{{pts?.appPage.generate||"產生"}}</a>
+        <a mat-menu-item routerLink="/settings">⚙{{pts?.appPage.setup||"設定"}}</a>
     </mat-menu>
-    <span>{{title}}</span>
+    <span>{{pts?.appPage.title||"班級成績管理小幫手"}}</span>
 
     <button mat-icon-button [matMenuTriggerFor]="langMenu" class="right">
       <mat-icon class="mat-18">translate</mat-icon>

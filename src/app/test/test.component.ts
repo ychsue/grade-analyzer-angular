@@ -170,7 +170,7 @@ showWindowConfirm(message?: string){
 }
 
 changeAppTitle(){
-  this.app.title = Date();
+  this.app.pts.appPage.title = Date();
 }
 
 showSpinner(){

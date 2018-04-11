@@ -1,3 +1,4 @@
+* [2018-4-11 Wed] app.component.html & welcome.component.html are multilingual now.
 * [2018-4-11 Wed] Now, it can work with multilingual.
 After installing ~i18n-page-texts~ 
 , writing a provider ~page-texts.service.ts~

@@ -26,7 +26,6 @@ export class AppComponent implements OnInit{
         });
     }
   }
-  title:string = "班級成績管理小幫手";
   gSettings: GlobalSettings;
   pts:IPageTexts;
 

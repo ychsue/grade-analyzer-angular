@@ -1,19 +1,19 @@
-<p [innerHTML]="(app.pts?.welcomePage.welcomeIntro).replace('{0}','📋').replace('{1}','😀').replace('{2}','🎎').replace('{3}','&lt;a href=https://github.com/ychsue/grade-analyzer-angular&gt;Github&lt;/a&gt;')">
-  歡迎使用此小幫手，此小幫手可以幫你將你的學生的成績📋依照個別的學生😀輸出其表格，也可以看到所有學生🎎長期的學習趨勢。使用法很簡單，目前只有<b>設定</b>與<b>產生</b>這兩個功能。原始碼在 <a href="https://github.com/ychsue/grade-analyzer-angular">Github</a>裡。
+<div class="noteMain" *ngIf="(isSet && isExist)===false">
+    <h1>{{app.pts?.welcomePage.note||"注意"}}</h1>
+    <div>{{app.pts?.welcomePage.noteIntro||"條列"}}</div>
+    <ol>
+        <li *ngIf="!!!isSet">{{app.pts?.welcomePage.notSetting||"尚未設定"}}</li>
+        <li *ngIf="!!!isExist">{{app.pts?.welcomePage.noTemplateSheet||"無樣板表單"}}</li>
+    </ol>
+    <div>{{app.pts?.welcomePage.noteAction||"請只按設定按鈕開始設定"}}</div>
+    <a routerLink="/settings" mat-raised-button color="primary">⚙{{app.pts?.appPage.setup||"設定"}}</a>
+</div>
+<p [innerHTML]="(app.pts?.welcomePage.welcomeIntro||'歡迎使用此小幫手').replace('{0}','📋').replace('{1}','😀').replace('{2}','🎎').replace('{3}','https://github.com/ychsue/grade-analyzer-angular')">
 </p>
 
-<h3><b>設定</b></h3>
-<p>
-  原則上，<b>設定</b>只有在第一次使用時才需要去動用到它，
-  因為對這個小幫手而言，它一開始並不知道你怎麼稱呼<i>ID</i>，<i>總分</i>等有特殊意義的表頭，你得在<b>設定</b>裡告訴它。
-  此外，表單{{this.gSettings.templateWorksheetName}}是用來產生所有成績輸入表單的樣板，請勿刪除它，你在裏頭所新增或刪除的學生或科目，
-  即未來你的成績輸入表單的樣板。
+<h3><b>{{app.pts?.welcomePage.setup||"設定"}}</b></h3>
+<p [innerHTML]="(app.pts?.welcomePage.cSetup||'透過它，此程式才知道那些欄位對你有何意義。而且，透過它，也可以輕鬆地幫你產生一份樣板表單，透過此樣板表單就可以產生其他的成績輸入表單了。').replace('{0}',this.gSettings.templateWorksheetName)">
 </p>
 
-<h3><b>產生</b></h3>
-<p>
-  由這裡你可以產生每次月考成績輸入的表格，也可以產生歷年成績的比較。
-  表單<b>{{this.gSettings.chartSheetName}}</b>會輸出個別學生的學習狀況，可以印下來後交給學生家長；
-  而<b>{{this.gSettings.chartSheetName}}_$各科目$</b>則用顏色顯示所有學生在每次考試中成績大概落在哪裡，
-  好方便老師看出哪些學生需要輔導，而哪些又適合當小老師。
-</p>
+<h3><b>{{app.pts?.welcomePage.generate||"產生"}}</b></h3>
+<p [innerHTML]="(app.pts?.welcomePage.cGenerate||'用來產生給學生家長與給老師參考的表單。').split('{0}').join(gSettings.chartSheetName).replace('{1}',app.pts?.welcomePage.eachCourse)"></p>

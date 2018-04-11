@@ -22,13 +22,16 @@ export class WelcomeComponent implements OnInit {
     public app: AppComponent
   ) { }
 
+  isSet: boolean = false;
+  isExist: boolean = false;
+
   async ngOnInit() {
     //* [2018-04-09 14:06] Check whether to force the user to setup needed settings
     this.gSettings = this.dataServerService.globalSettings;
-    const isSet = this.dataServerService.isSet();
-    const isExist = (isSet)?await this.dataServerService.checkWorksheetExistance(this.dataServerService.globalSettings.templateWorksheetName) : false;
-    if(isSet === false || isExist === false){
-      if(this.gSettings.isDebugMode) this.messageService.add("WelcomeComponent.ngOnInit: "+isSet);
+    this.isSet = this.dataServerService.isSet();
+    this.isExist = (this.isSet)?await this.dataServerService.checkWorksheetExistance(this.dataServerService.globalSettings.templateWorksheetName) : false;
+    if(this.isSet === false || this.isExist === false){
+      if(this.gSettings.isDebugMode) this.messageService.add("WelcomeComponent.ngOnInit: "+this.isSet);
       // this.router.navigate(['/settings']);
     }
   }

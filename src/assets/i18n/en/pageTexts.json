@@ -1,9 +1,24 @@
 {
   "welcomePage": {
-    "setup": "setup",
-    "welcomeIntro": "You are welcome to use this helper. This helper can help you to output your students' scores {0} according to individual students {1}, and you can also see the long-term learning trends of all students {2}. Usage is very simple, currently only <b>setting</b> and <b>generating</b> these two functions. Source code at {3}"
+    "setup": "Settings",
+    "welcomeIntro": "You are welcome to use this helper. This helper can help you to output your students' scores {0} according to individual students {1}, and you can also see the long-term learning trends of all students {2}. Usage is very simple, currently only <b>setting</b> and <b>generating</b> these two functions. Its source code is at {3}.",
+    "cSetup": "In principle, you'll never use <b>settings</b> except the first time, because for this helper, it doesn’t know the meaning of <i>ID</i>. , <i>Total</i> and other special headers in your worksheet and you have to tell it in <b>Settings</b>. In addition, the worksheet <i>{0}</i> is used to generate a template for all grade entry worksheets. So, do not delete it but you can edit it.",
+    "generate": "Generate",
+    "cGenerate": "From that page, you can generate a worksheet with a table for each monthly exam entry, and you can also generate a comparison of previous exams' results. The worksheet <b>{0}</b> will output the individual student's learning status, which can be printed and handed over to the student's parent; <b>{0}_${1}$</b> will display a table with all the grades of all students in color so as to help the teacher to figure out which students need help and which students are suitable to be a tutor to help those need help.",
+    "eachCourse": "course",
+    "note": "NOTE",
+    "noteIntro": "Your settings are incomplete and the problems are listed as follows:",
+    "notSetting": "You haven't finished any settings yet",
+    "noTemplateSheet": "You did not provide a template worksheet",
+    "noteAction": "After reading the following instructions, please click the following button to enter the settings page to make the necessary settings. Thank you."
   },
   "TestPage": {
     "test": "test"
+  },
+  "appPage": {
+    "welcome": "welcome",
+    "setup": "settings",
+    "generate": "generate",
+    "title": "Grade Helper for a Class Instructor"
   }
 }
