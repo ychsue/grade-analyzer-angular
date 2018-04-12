@@ -7,6 +7,7 @@ import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { MessageService } from './message.service';
 import { GlobalSettings } from './global-settings';
 import { PageTextsService } from './page-texts.service';
+import { LocalStorageService } from './local-storage.service';
 
 //declare const Excel: any;
 
@@ -37,14 +38,30 @@ export class AppComponent implements OnInit{
     value: 30
   };
 
-  updateLang(isoCode:string){
-    this.ptsService.updatePageTexts(isoCode);
+  updateLang(isoCode?:string){
+    if(!!!isoCode) {
+      isoCode = (!!this.lsService.langCode)?this.lsService.langCode:navigator.language;
+    }
+    if(!!isoCode && (isoCode===this.lsService.langCode)) {
+      if(!!this.pts) {
+        return;
+      } else if(!!this.lsService.pageTexts){
+        this.pts = JSON.parse(this.lsService.pageTexts);
+        return;
+      } else {;}
+    }
+
+    this.ptsService.updatePageTexts(isoCode).subscribe(obj=>{
+      this.lsService.langCode = isoCode;
+      this.lsService.pageTexts = JSON.stringify(obj);
+    });
   }
 
   constructor(public dialog:MatDialog, 
     private dataServerService: DataServerService,
     private messageService: MessageService,
     public ptsService: PageTextsService,
+    private lsService: LocalStorageService,
     private zone:NgZone
   ){
         //* [2018-04-09 14:08] Initialize the pageTexts
@@ -61,7 +78,7 @@ export class AppComponent implements OnInit{
             self.setOfSpinner={isActivate:false,title:"Updating Texts",message:"Updating Texts"};
           });
         });
-        this.ptsService.updatePageTexts(navigator.language);
+        this.updateLang();
   }
 
 }

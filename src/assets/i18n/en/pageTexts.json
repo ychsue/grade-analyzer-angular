@@ -19,6 +19,20 @@
     "welcome": "welcome",
     "setup": "settings",
     "generate": "generate",
-    "title": "Grade Helper for a Class Instructor"
+    "title": "Grade Helper"
+  },
+  "gSettings": {
+    "stID": "ID",
+    "stName": "Name",
+    "stAvg": "AVG",
+    "stTotal": "Total",
+    "stScore": "Rank",
+    "stTitle": "exam $TIMES$, sem. $SEM$, $YEAR$",
+    "stCAvg": "Average",
+    "stCHighest": "Highest",
+    "stCLowest": "Lowest",
+    "chartSheetName": "StudentList",
+    "stSpecial": "Parent's signature and opinions",
+    "new_year": "2017"
   }
 }

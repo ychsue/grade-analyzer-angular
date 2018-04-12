@@ -8,6 +8,7 @@ import { Subject } from 'rxjs/Subject';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { SpinnerComponent } from '../spinner/spinner.component';
+import { PageTextsService } from '../page-texts.service';
 
 @Component({
   selector: 'app-settings',
@@ -28,6 +29,7 @@ export class SettingsComponent implements OnInit {
     private dataServerService: DataServerService,
     private messageService: MessageService,
     private appComponent: AppComponent,
+    private ptsService: PageTextsService,
     private zone:NgZone
   ) { }
   
@@ -154,6 +156,7 @@ export class SettingsComponent implements OnInit {
         this.iniSettings = new GlobalSettings(this.gSettings); //It is used to check whether it is changed.
         const isSet = this.dataServerService.isSet();
         if (isSet === false) {
+          this.ptsService.turnGStoDefaultValue(this.gSettings);
           await this.dataServerService.updateSettingsToServer();
           setTimeout(()=>this.showDialog0(),500); // You cannot show it immediately because it is not initialized during this ngOnInit.
           if(this.gSettings.isDebugMode) this.messageService.add('SettingsComponent.ngOnInit.saveAsync: isSet=' + this.dataServerService.isSet());

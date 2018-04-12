@@ -20,5 +20,19 @@ export const defaultPTS:IPageTexts ={
   },
   "TestPage": {
     "test": "測試"
+  },
+  "gSettings": {
+    "stID": "座號",
+    "stName": "姓名",
+    "stAvg": "平均",
+    "stTotal": "總分",
+    "stScore": "績效",
+    "stTitle": "$YEAR$學年度 學期$SEM$ 第$TIMES$次考試",
+    "stCAvg": "各科平均",
+    "stCHighest": "最高分",
+    "stCLowest": "最低分",
+    "new_year": "106",
+    "chartSheetName": "學生列表",
+    "stSpecial": "家長簽名及意見"
   }
 }

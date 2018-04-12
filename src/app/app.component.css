@@ -10,4 +10,5 @@ app-dialog{
 .right{
     position: absolute;
     right: 16px;
+    top: 16px;
 }

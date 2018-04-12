@@ -17,6 +17,7 @@ import { ExcelHelperModule } from './excel-helper/excel-helper.module';
 import { GenWorksheetComponent } from './gen-worksheet/gen-worksheet.component';
 import { PageTextsService } from './page-texts.service';
 import { HttpClientModule } from '@angular/common/http';
+import { LocalStorageService } from './local-storage.service';
 
 
 @NgModule({
@@ -46,7 +47,7 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule
   ],
   entryComponents:[AppComponent,DialogComponent],
-  providers: [MessageService, DataServerService, PageTextsService],
+  providers: [MessageService, DataServerService, PageTextsService, LocalStorageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

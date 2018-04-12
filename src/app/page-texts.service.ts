@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { defaultPTS } from "../defaultPTS";
+import { GlobalSettings } from './global-settings';
 
 @Injectable()
 export class PageTextsService {
@@ -17,7 +18,18 @@ export class PageTextsService {
   
   constructor(private http:HttpClient) { }
 
-  updatePageTexts(isoCode:string):Observable<Object>|void {
+  turnGStoDefaultValue(gs:GlobalSettings):void{
+    if(!!this.pts && !!gs){
+      for (const key in this.pts.gSettings) {
+        if (this.pts.gSettings.hasOwnProperty(key)) {
+          const element = this.pts.gSettings[key];
+          gs[key] = element;
+        }
+      }
+    }
+  }
+
+  updatePageTexts(isoCode:string):Observable<Object> {
     if(isoCode.indexOf("zh")>=0){
       isoCode="zh-tw";
     } else {
@@ -29,7 +41,7 @@ export class PageTextsService {
     }
     //* [2018-04-09 14:41] Update the pageTexts
     if(isoCode === this.langCode && this.pts) {
-      return;
+      return null;
     }
     let self = this;
     self.updateStart.next();

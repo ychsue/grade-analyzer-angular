@@ -2,6 +2,7 @@ interface IPageTexts {
     appPage: IAppPage;
     welcomePage: IWelcomePage;
     TestPage: ITestPage;
+    gSettings: IGSettings;
 }
 interface IAppPage {
     welcome: string;
@@ -24,4 +25,18 @@ interface IWelcomePage {
 }
 interface ITestPage {
     test: string;
+}
+interface IGSettings {
+    stID: string;
+    stName: string;
+    stAvg: string;
+    stTotal: string;
+    stScore: string;
+    stTitle: string;
+    stCAvg: string;
+    stCHighest: string;
+    stCLowest: string;
+    new_year: string;
+    chartSheetName: string;
+    stSpecial: string;
 }
