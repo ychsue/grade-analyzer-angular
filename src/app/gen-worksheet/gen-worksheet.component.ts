@@ -8,6 +8,7 @@ import { DialogComponent, dialogData } from '../dialog/dialog.component';
 import { Subject } from 'rxjs/Subject';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { SpinnerComponent } from '../spinner/spinner.component';
+import { PageTextsService } from '../page-texts.service';
 
 @Component({
   selector: 'app-gen-worksheet',
@@ -248,7 +249,12 @@ export class GenWorksheetComponent implements OnInit {
           });
         }
         
-        constructor(private messageService:MessageService, private dataServerService: DataServerService, private appComponent: AppComponent, private zone: NgZone) { }
+        constructor(
+          private messageService:MessageService, 
+          private dataServerService: DataServerService,
+          private appComponent: AppComponent, 
+          public ptsService: PageTextsService,
+          private zone: NgZone) { }
         
         ngOnInit() {
           this.updateNewSheetName();

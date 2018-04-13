@@ -63,5 +63,28 @@
     "settingChanged": "Settings have been changed. <br/>",
     "wannaChange": "Do you want to change?",
     "top": "Above the Grades"
+  },
+  "GenWorksheetPage": {
+    "genNewSheet": "Generate new form",
+    "newNameForm": "New form name form;",
+    "year": "school year:",
+    "sem": "semester:",
+    "times": "The first few times:",
+    "genNewChartSheet": "Create new chart",
+    "base": "main",
+    "compare": "Comparing",
+    "thisTime": "This time",
+    "previousTime": "Last time",
+    "chartWhichCourse": "Which score is plotted?",
+    "course": "subject",
+    "chartSheetName": "The output form name of the chart",
+    "output": "Output",
+    "visualize": "visualize",
+    "sen4SpecialCell": "Special field text",
+    "useIt": "Apply this text",
+    "tutorial": "Before using the button below, please set the form of the first student in the form <div class='chartSheetName'>{0}</div>, such as width, height, font, color, etc., but <br /> ><b>Please do not delete any columns or columns</b>",
+    "justHeight": "Only apply column height",
+    "forAll": "Apply all (very slow)",
+    "visNote": "Note: In fact, the ruled lines can also be applied. However, before you draw your desired ruled line, please wash out all the preset ruled lines and start the ruled line again. How to wash off all at once? It's simple. Just <b>select all (Ctrl-A)</b> the entire table, and then select <b>common=>no frame</b>."
   }
 }

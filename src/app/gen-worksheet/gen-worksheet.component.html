@@ -1,90 +1,86 @@
 <div class="typeContainer" [class.hasShadow]='this.currentGen===this.typeOfGen.newWorksheet'>
   <div class="selType"
-  (click)='this.currentGen=this.typeOfGen.newWorksheet'>📋產生新表單</div>
+(click)='this.currentGen=this.typeOfGen.newWorksheet'>📋{{ptsService.pts?.GenWorksheetPage.genNewSheet||"產生新表單"}}</div>
   <div *ngIf='this.currentGen===this.typeOfGen.newWorksheet' [@fadeInOut]>
     <mat-form-field class="inline">
       <input matInput 
-      placeholder="新表單名稱形式；" 
+      [placeholder]="ptsService.pts?.GenWorksheetPage.newNameForm||'新表單名稱形式；'" 
       [value]="this.gsettings.eachSheet+'   ➡   '+this.newSheetName"
       disabled='disabled'/>
     </mat-form-field>
     <div>
       <mat-form-field class="block">
         <input matInput 
-        placeholder="學年：" 
+        [placeholder]="ptsService.pts?.GenWorksheetPage.year||'學年：'" 
         [value]="this.gsettings.new_year"
         (input)='this.gsettings.new_year=$event.target.value;this.updateNewSheetName()'/>
       </mat-form-field>
       <mat-form-field class="block">
         <input matInput 
-        placeholder="學期：" 
+        [placeholder]="ptsService.pts?.GenWorksheetPage.sem||'學期：'" 
         [value]="this.gsettings.new_sem"
         (input)='this.gsettings.new_sem=$event.target.value;this.updateNewSheetName()'/>
       </mat-form-field>
       <mat-form-field class="block">
         <input matInput 
-        placeholder="第幾次：" 
+        [placeholder]="ptsService.pts?.GenWorksheetPage.times||'第幾次：'" 
         [value]="this.gsettings.new_times"
         (input)='this.gsettings.new_times=$event.target.value;this.updateNewSheetName()'/>
       </mat-form-field>
-      <button mat-raised-button (click)='genNewSheet()'>產生新表單</button>
+      <button mat-raised-button (click)='genNewSheet()'>{{ptsService.pts?.GenWorksheetPage.genNewSheet||"產生新表單"}}</button>
     </div>
   </div>
 </div>
 <div class="typeContainer" [class.hasShadow]='this.currentGen===this.typeOfGen.newCharts'>
   <div class="selType"
-  (click)='this.currentGen=this.typeOfGen.newCharts'>📈產生新圖表</div>
+  (click)='this.currentGen=this.typeOfGen.newCharts'>📈{{ptsService.pts?.GenWorksheetPage.genNewChartSheet||"產生新圖表"}}</div>
   <div *ngIf='this.currentGen===this.typeOfGen.newCharts' [@fadeInOut]>
     <div class="mainSetForChart">
-      <div class="boxLabel">主要</div>
-      <div>比較</div>
+      <div class="boxLabel">{{ptsService.pts?.GenWorksheetPage.base||"主要"}}</div>
+      <div>{{ptsService.pts?.GenWorksheetPage.compare||"比較"}}</div>
       <mat-form-field class="col2">
-        <mat-select [(ngModel)]="thisTimeGrade" placeholder="這一次">
+        <mat-select [(ngModel)]="thisTimeGrade" [placeholder]="ptsService.pts?.GenWorksheetPage.thisTime||'這一次'">
           <mat-option *ngFor="let grade of gradesInfo" [value]="grade" (onSelectionChange)="this.updateGrades()">{{grade.thisSheetName}}</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field class="col2">
-        <mat-select [(ngModel)]="previousTimeGrade" placeholder="前一次">
+        <mat-select [(ngModel)]="previousTimeGrade" [placeholder]="ptsService.pts?.GenWorksheetPage.previousTime||'前一次'">
           <mat-option *ngFor="let grade of gradesInfo" [value]="grade" (onSelectionChange)="this.updateGrades()">{{grade.thisSheetName}}</mat-option>
         </mat-select>
       </mat-form-field>
       <div>
-        <span class="col2">作圖哪個成績？</span>
+        <span class="col2">{{ptsService.pts?.GenWorksheetPage.chartWhichCourse||"作圖哪個成績？"}}</span>
         <mat-form-field class="col2">
-          <mat-select [(ngModel)]="chosenGrade" placeholder="成績">
+          <mat-select [(ngModel)]="chosenGrade" [placeholder]="ptsService.pts?.GenWorksheetPage.course||'成績'">
             <mat-option *ngFor="let grade of grades" [value]="grade">{{grade.name}}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
       <div>
         <mat-form-field>
-          <input matInput placeholder="輸出圖表的表單名稱" 
+          <input matInput [placeholder]="ptsService.pts?.GenWorksheetPage.chartSheetName||'輸出圖表的表單名稱'" 
           [value]="this.gsettings.chartSheetName"
           (input)="this.gsettings.chartSheetName = $event.target.value"/>
         </mat-form-field>
-        <button mat-raised-button (click)="genChartSheet()">輸出</button>
+        <button mat-raised-button (click)="genChartSheet()">{{ptsService.pts?.GenWorksheetPage.output||"輸出"}}</button>
       </div>
     </div>
     <div class="detailSetForChart">
-      <div class="boxLabel">視覺化</div>
+      <div class="boxLabel">{{ptsService.pts?.GenWorksheetPage.visualize||"視覺化"}}</div>
       <div>
         <mat-form-field class="col2">
-          <input matInput placeholder="特殊欄位文字"
+          <input matInput [placeholder]="ptsService.pts?.GenWorksheetPage.sen4SpecialCell||'特殊欄位文字'"
           [value]="this.gsettings.stSpecial"
           (input)="this.updateStSpecial($event.target.value)"/>
         </mat-form-field>
-        <button mat-raised-button (click)="this.updateSpecialWords()" class="col2">套用此文字</button>
+        <button mat-raised-button (click)="this.updateSpecialWords()" class="col2">{{ptsService.pts?.GenWorksheetPage.useIt||"套用此文字"}}</button>
       </div>
       <div class="detailSetForChart">
         <div>
-          <span>使用以下的按鈕前，請先對表單
-            <div class="chartSheetName">{{this.gsettings.chartSheetName}}</div>
-            裡的第一位學生的表格進行設定，如寬、高、字體、顏色等，但<br/>
-          <b>請不要刪減任何欄或列</b></span></div>
-          <button mat-raised-button (click)="this.applyRowHeight()" class="col2 col2-1">僅套用列高</button>
-          <button mat-raised-button (click)="this.applyFormat()" class="col2 col2-2">套用全部(很慢)</button>
-          <div class="note">注意：格線其實也可套用，不過，在畫自己想要的格線前，請先將預設的所有格線洗掉後再重新開始畫格線。<br/>
-            怎麼一次全洗掉？很簡單。只要<b>全選(Ctrl-A)</b>整個表格，然後選<b>常用=>無框線</b>即可。
+          <span [innerHTML]="(ptsService.pts?.GenWorksheetPage.tutorial||'使用以下的按鈕前，請先對表單{0}裡的第一位學生的表格進行設定，如寬、高、字體、顏色等，但請不要刪減任何欄或列').replace('{0}',this.gsettings.chartSheetName)"></span></div>
+          <button mat-raised-button (click)="this.applyRowHeight()" class="col2 col2-1">{{ptsService.pts?.GenWorksheetPage.justHeight||"僅套用列高"}}</button>
+          <button mat-raised-button (click)="this.applyFormat()" class="col2 col2-2">{{ptsService.pts?.GenWorksheetPage.forAll||"套用全部(很慢)"}}</button>
+          <div class="note" [innerHTML]="ptsService.pts?.GenWorksheetPage.visNote||'注意：格線其實也可套用，不過，在畫自己想要的格線前，請先將預設的所有格線洗掉後再重新開始畫格線。怎麼一次全洗掉？很簡單。只要全選(Ctrl-A)整個表格，然後選常用=>無框線即可。'">
           </div>
         </div>
       </div>

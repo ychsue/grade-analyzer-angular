@@ -4,6 +4,7 @@ interface IPageTexts {
     TestPage: ITestPage;
     gSettings: IGSettings;
     SettingsPage: ISettingsPage;
+    GenWorksheetPage: IGenWorksheetPage;
 }
 interface IAppPage {
     welcome: string;
@@ -69,4 +70,27 @@ interface ISettingsPage {
     notExisting: string;
     settingChanged: string;
     wannaChange: string;
+}
+interface IGenWorksheetPage {
+    genNewSheet: string;
+    newNameForm: string;
+    year: string;
+    sem: string;
+    times: string;
+    genNewChartSheet: string;
+    base: string;
+    compare: string;
+    thisTime: string;
+    previousTime: string;
+    chartWhichCourse: string;
+    course: string;
+    chartSheetName: string;
+    output: string;
+    visualize: string;
+    sen4SpecialCell: string;
+    useIt: string;
+    tutorial: string;
+    justHeight: string;
+    forAll: string;
+    visNote: string;
 }
