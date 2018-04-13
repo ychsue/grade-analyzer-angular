@@ -3,6 +3,7 @@ interface IPageTexts {
     welcomePage: IWelcomePage;
     TestPage: ITestPage;
     gSettings: IGSettings;
+    SettingsPage: ISettingsPage;
 }
 interface IAppPage {
     welcome: string;
@@ -39,4 +40,33 @@ interface IGSettings {
     new_year: string;
     chartSheetName: string;
     stSpecial: string;
+}
+interface ISettingsPage {
+    special: string;
+    pChartName: string;
+    pTmpName: string;
+    speField: string;
+    top: string;
+    left: string;
+    right: string;
+    bottom: string;
+    renew: string;
+    genTmp: string;
+    renewing: string;
+    done: string;
+    firstTime: string;
+    firstTimeMsg: string;
+    needTmpTitle: string;
+    needTmpMsg: string;
+    understand: string;
+    note: string;
+    change: string;
+    unchange: string;
+    keepEdit: string;
+    creatingSample: string;
+    waiting: string;
+    running: string;
+    notExisting: string;
+    settingChanged: string;
+    wannaChange: string;
 }

@@ -53,7 +53,7 @@ export class GlobalSettings {
         this.nH          =(gSettings)?gSettings.nH:11;
         this.stSpecial   =(gSettings)?gSettings.stSpecial: '家長簽名及意見';
 
-        this.isDebugMode =(gSettings)?gSettings.isDebugMode: false;
+        this.isDebugMode =(gSettings)?gSettings.isDebugMode: true;
         }
 
     isTheSame(compared: GlobalSettings): boolean{

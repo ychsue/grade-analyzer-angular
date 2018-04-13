@@ -22,14 +22,34 @@ export class AppComponent implements OnInit{
     if(this.dataServerService.isSet()){
       let times = this.dataServerService.getUsedTimes()+1;
       this.dataServerService.setUsedTimes(times)
-        .then(()=>{
-          if(this.gSettings.isDebugMode) this.messageService.add("AppComponent.ngOnInit: usedTimes="+times);
-        });
+      .then(()=>{
+        if(this.gSettings.isDebugMode) this.messageService.add("AppComponent.ngOnInit: usedTimes="+times);
+      });
     }
+    //* [2018-04-09 14:08] Initialize the pageTexts
+    let self = this;
+    this.pts = this.ptsService.pts; //Might be null.
+    this.ptsService.updateStart.subscribe(()=>{
+      this.zone.run(()=>{
+        self.setOfSpinner={isActivate:true,title:"Updating Texts",message:"Updating Texts"};
+      });
+    });
+    this.ptsService.updateEnd.subscribe((pts)=>{
+      self.pts = pts; //Link to this.ptsService.pts (check this observable "updateEnd")
+      this.zone.run(()=>{
+        self.setOfSpinner={isActivate:false,title:"Updating Texts",message:"Updating Texts"};
+      });
+    });
+    
+    if(this.dataServerService.globalSettings.isDebugMode) {
+      this.messageService.add(`Before app.component:updateLang`);
+    }
+    
+    this.updateLang();    
   }
   gSettings: GlobalSettings;
   pts:IPageTexts;
-
+  
   setOfSpinner:{isActivate:boolean, title:string, message:string, mode?:string,value?:number} = {
     isActivate: false,
     title: "Running",
@@ -37,18 +57,27 @@ export class AppComponent implements OnInit{
     mode: "indeterminate",
     value: 30
   };
+  
+  updateLang(isoCode?:string){    
+    if(this.dataServerService.globalSettings.isDebugMode) {
+      this.messageService.add(`In app.component:updateLang: isoCode=${isoCode}, navigator=${navigator.language}`);
+    }
 
-  updateLang(isoCode?:string){
     if(!!!isoCode) {
       isoCode = (!!this.lsService.langCode)?this.lsService.langCode:navigator.language;
     }
-    if(!!isoCode && (isoCode===this.lsService.langCode)) {
+
+    if(!!this.lsService.langCode && (isoCode===this.lsService.langCode)) {
       if(!!this.pts) {
         return;
       } else if(!!this.lsService.pageTexts){
-        this.pts = JSON.parse(this.lsService.pageTexts);
+        this.ptsService.pts = JSON.parse(this.lsService.pageTexts);
+        this.pts = this.ptsService.pts;
+        if(this.dataServerService.globalSettings.isDebugMode) {
+          this.messageService.add(`In app.component:updateLang after refine: isoCode=${isoCode}, pts=${this.pts}`);
+        }    
         return;
-      } else {;}
+      }
     }
 
     this.ptsService.updatePageTexts(isoCode).subscribe(obj=>{
@@ -56,7 +85,7 @@ export class AppComponent implements OnInit{
       this.lsService.pageTexts = JSON.stringify(obj);
     });
   }
-
+  
   constructor(public dialog:MatDialog, 
     private dataServerService: DataServerService,
     private messageService: MessageService,
@@ -64,21 +93,6 @@ export class AppComponent implements OnInit{
     private lsService: LocalStorageService,
     private zone:NgZone
   ){
-        //* [2018-04-09 14:08] Initialize the pageTexts
-        let self = this;
-        this.pts = this.ptsService.pts;
-        this.ptsService.updateStart.subscribe(()=>{
-          zone.run(()=>{
-            self.setOfSpinner={isActivate:true,title:"Updating Texts",message:"Updating Texts"};
-          });
-        });
-        this.ptsService.updateEnd.subscribe((pts)=>{
-          self.pts = pts;
-          zone.run(()=>{
-            self.setOfSpinner={isActivate:false,title:"Updating Texts",message:"Updating Texts"};
-          });
-        });
-        this.updateLang();
   }
-
+  
 }

@@ -1,3 +1,6 @@
+* [2018-4-13 Fri] PageTexts for Settings, both html texts and default fields' value are done.
+Note, I use ~pts~ both in pageTextsService and appComponent. This might not be a good idea since they might not be coherent. 
+At this moment I bind them through observable ~updateEnd~ of pageTextsService. Let me think of it. 
 * [2018-4-12 Thu] The chosen pageTexts will be saved in LocalStorage
 The stuff saved in LocalStorage will affect all excel documents and that it what I want because I hope that the user just need to setup the language once. To set the language for each excel document is a little wierd.
 * [2018-4-11 Wed] app.component.html & welcome.component.html are multilingual now.

@@ -1,19 +1,30 @@
 <form>
   <div id="div-tmp-name">
-      <h3>特殊表單名稱：</h3>
-      <button mat-raised-button
-       *ngIf="isTempSheetExist==false"
-       (click)="genTempIn()">{{btGenTmpText}}</button>
+      <h3>{{app.pts?.SettingsPage.special||"特殊表單名稱："}}</h3>
   </div>
-  <mat-form-field>
-    <input #inTmpName matInput placeholder="樣板表單名稱：" 
-      [value]="this.gSettings.templateWorksheetName"
-      (keyup)="onTempNameChanged(inTmpName.value)"/>
-  </mat-form-field>
-  <h3>樣板表單中特殊欄位值：</h3>
+
+  <div>
+    <mat-form-field>
+      <input #inChartName matInput [placeholder]="app.pts?.SettingsPage.pChartName||'成績圖表表單名稱：'" 
+        [value]="this.gSettings.chartSheetName"
+        (keyup)="onChartNameChanged(inChartName.value)"/>
+    </mat-form-field>
+  </div>
+
+  <div style="display: flex">
+    <mat-form-field style="flex-grow: 1">
+      <input #inTmpName matInput [placeholder]="app.pts?.SettingsPage.pTmpName||'樣板表單名稱：'" 
+        [value]="this.gSettings.templateWorksheetName"
+        (keyup)="onTempNameChanged(inTmpName.value)"/>
+    </mat-form-field>
+    <button mat-raised-button
+    *ngIf="isTempSheetExist==false"
+    (click)="genTempIn()">{{app.pts?.SettingsPage.genTmp||"➕產生"}}</button>
+ </div>
+  <h3>{{app.pts?.SettingsPage.speField||"樣板表單中特殊欄位值："}}</h3>
   <div class="block1">
     <div class="block-head">
-      科目上方
+      {{app.pts?.SettingsPage.top||"科目上方"}}
     </div>
     <mat-form-field>
       <input matInput placeholder="Title: "
@@ -24,7 +35,7 @@
   <div class="headerTerms">
     <div class="block2">
       <div class="block-head">
-        科目之左
+        {{app.pts?.SettingsPage.left||"科目之左"}}
       </div>
       <mat-form-field>
         <input matInput placeholder="ID：" 
@@ -39,7 +50,7 @@
     </div>
     <div class="block2">
         <div class="block-head">
-            科目之右
+            {{app.pts?.SettingsPage.right||"科目之右"}}
           </div>
           <mat-form-field>
         <input matInput placeholder="Total："
@@ -60,7 +71,7 @@
   </div>
   <div class="block1">
     <div class="block-head">
-      科目下方
+      {{app.pts?.SettingsPage.bottom||"科目下方"}}
     </div>
     <mat-form-field>
       <input matInput placeholder="Course Average：" 
@@ -81,7 +92,7 @@
   </div>
 </form>
 <div>
-  <button mat-raised-button (click)="refreshSettings()">🔃更新</button>
+  <button mat-raised-button (click)="refreshSettings()">🔃{{app.pts?.SettingsPage.renew||"更新"}}</button>
 </div>
 <!-- <table>
   <tr>
