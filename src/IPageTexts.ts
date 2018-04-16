@@ -93,4 +93,22 @@ interface IGenWorksheetPage {
     justHeight: string;
     forAll: string;
     visNote: string;
+    noGradeTitle: string;
+    noGradeMsg: string;
+    gotIt: string;
+    createNewSheet: string;
+    waiting: string;
+    failGenSheetTitle: string;
+    faliGenSheetMsg: string;
+    running: string;
+    creatingNewChart: string;
+    inCreating: string;
+    doneNewChart: string;
+    applyingFormat: string;
+    applying: string;
+    done: string;
+    applyingHeight: string;
+    mayNotExistSheet: string;
+    notExistSheet: string;
+    applying2Student: string;
 }

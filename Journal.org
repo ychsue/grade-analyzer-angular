@@ -1,3 +1,5 @@
+* [2018-4-16 Mon] PageTexts for gen-worksheet are done
+
 * [2018-4-13 Fri] PageTexts for Settings, both html texts and default fields' value are done.
 Note, I use ~pts~ both in pageTextsService and appComponent. This might not be a good idea since they might not be coherent. 
 At this moment I bind them through observable ~updateEnd~ of pageTextsService. Let me think of it. 

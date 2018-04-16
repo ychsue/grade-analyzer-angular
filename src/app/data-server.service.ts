@@ -7,6 +7,7 @@ import { ExcelHelperModule, ICellsBound } from './excel-helper/excel-helper.modu
 import { ForEachStudent } from './gen-worksheet/for-each-student';
 import { Igrade } from './gen-worksheet/gen-worksheet.component';
 import { Subject } from "rxjs/Subject";
+import { PageTextsService } from './page-texts.service';
 
 @Injectable()
 export class DataServerService {
@@ -667,6 +668,9 @@ export class DataServerService {
       for (let i0:number=0;i0<tInfos.length;i0++) {
         let range = tableSheetForChart.getRange(ExcelHelperModule.cellsToAddress([1,i0+1],[ithStudent+1,i0+1]));
         let cFormat= range.conditionalFormats.add(Excel.ConditionalFormatType.colorScale);
+        // let criteria = cFormat.colorScale.criteria;
+        // criteria.maximum.color="#00FF00";
+        // criteria.minimum.color="#FF0000";
       }
 
       return true;
@@ -752,7 +756,7 @@ export class DataServerService {
     });
   }
 
-  constructor(private messageService: MessageService, private zone:NgZone) { }
+  constructor(private messageService: MessageService, private zone:NgZone, private ptsService:PageTextsService) { }
   
 }
 
