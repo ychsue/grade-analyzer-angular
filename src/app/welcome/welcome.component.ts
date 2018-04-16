@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from '../message.service';
 import { GlobalSettings } from '../global-settings';
 import { AppComponent } from '../app.component';
+import { PageTextsService } from '../page-texts.service';
 
 @Component({
   selector: 'app-welcome',
@@ -19,7 +20,8 @@ export class WelcomeComponent implements OnInit {
     // private actRoute: ActivatedRoute,
     // private router: Router,
     private messageService: MessageService,
-    public app: AppComponent
+    private app: AppComponent,
+    public ptsService: PageTextsService
   ) { }
 
   isSet: boolean = false;

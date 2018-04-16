@@ -28,14 +28,14 @@ export class AppComponent implements OnInit{
     }
     //* [2018-04-09 14:08] Initialize the pageTexts
     let self = this;
-    this.pts = this.ptsService.pts; //Might be null.
+    // this.pts = this.ptsService.pts; //Might be null.
     this.ptsService.updateStart.subscribe(()=>{
       this.zone.run(()=>{
         self.setOfSpinner={isActivate:true,title:"Updating Texts",message:"Updating Texts"};
       });
     });
     this.ptsService.updateEnd.subscribe((pts)=>{
-      self.pts = pts; //Link to this.ptsService.pts (check this observable "updateEnd")
+      // self.pts = pts; //Link to this.ptsService.pts (check this observable "updateEnd")
       this.zone.run(()=>{
         self.setOfSpinner={isActivate:false,title:"Updating Texts",message:"Updating Texts"};
       });
@@ -48,7 +48,7 @@ export class AppComponent implements OnInit{
     this.updateLang();    
   }
   gSettings: GlobalSettings;
-  pts:IPageTexts;
+  // pts:IPageTexts;
   
   setOfSpinner:{isActivate:boolean, title:string, message:string, mode?:string,value?:number} = {
     isActivate: false,
@@ -68,13 +68,13 @@ export class AppComponent implements OnInit{
     }
 
     if(!!this.lsService.langCode && (isoCode===this.lsService.langCode)) {
-      if(!!this.pts) {
+      if(!!this.ptsService.pts) {
         return;
       } else if(!!this.lsService.pageTexts){
         this.ptsService.pts = JSON.parse(this.lsService.pageTexts);
-        this.pts = this.ptsService.pts;
+        // this.pts = this.ptsService.pts;
         if(this.dataServerService.globalSettings.isDebugMode) {
-          this.messageService.add(`In app.component:updateLang after refine: isoCode=${isoCode}, pts=${this.pts}`);
+          this.messageService.add(`In app.component:updateLang after refine: isoCode=${isoCode}, pts=${this.ptsService.pts}`);
         }    
         return;
       }

@@ -46,7 +46,7 @@
 <div>
   <button (click)="updatePageTexts('zh')">zh</button>
   <button (click)="updatePageTexts('en')" >en</button>
-  <div>{{this.app.pts?.TestPage.test||"你好嗎?"}}</div>
+  <div>{{this.ptsService.pts?.TestPage.test||"你好嗎?"}}</div>
 </div>
 <ul>
   <li *ngFor="let message of messageService.messages">

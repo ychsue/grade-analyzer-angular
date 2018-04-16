@@ -5,6 +5,7 @@ interface IPageTexts {
     gSettings: IGSettings;
     SettingsPage: ISettingsPage;
     GenWorksheetPage: IGenWorksheetPage;
+    dataServerService: IDataServerService;
 }
 interface IAppPage {
     welcome: string;
@@ -111,4 +112,19 @@ interface IGenWorksheetPage {
     mayNotExistSheet: string;
     notExistSheet: string;
     applying2Student: string;
+}
+interface IDataServerService {
+    applyOnStudentCol: string;
+    english: string;
+    chinese: string;
+    math: string;
+    science: string;
+    noTmpSheet: string;
+    start: string;
+    timesID: string;
+    compare: string;
+    output2IDDone: string;
+    noSheet: string;
+    completeIthStu: string;
+    applyingOnRow: string;
 }

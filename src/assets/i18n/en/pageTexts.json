@@ -104,5 +104,20 @@
     "mayNotExistSheet": "Sheet <b>{0}</b> <br/> may not exist",
     "notExistSheet": "The {0} worksheet does not exist",
     "applying2Student": "Apply to student {0}"
+  },
+  "dataServerService": {
+    "applyOnStudentCol": "Complete application of line {1} of student {0}",
+    "english": "English",
+    "chinese": "Chinese",
+    "math": "Math",
+    "science": "Science",
+    "noTmpSheet": "Worksheet {0} does not exist. Please go to <b>Settings</b> to create it first.",
+    "start": "Start",
+    "timesID": "Grade sheets➡\nID ⬇",
+    "compare": "Compare: {0}",
+    "output2IDDone": "Output ID={0} Complete",
+    "noSheet": "{0} does not exist, please generate it first",
+    "completeIthStu": "Completed result os Student {0}",
+    "applyingOnRow": "Applying in line {0}"
   }
 }

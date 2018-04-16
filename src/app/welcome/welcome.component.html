@@ -1,19 +1,19 @@
 <div class="noteMain" *ngIf="(isSet && isExist)===false">
-    <h1>{{app.pts?.welcomePage.note||"注意"}}</h1>
-    <div>{{app.pts?.welcomePage.noteIntro||"條列"}}</div>
+    <h1>{{ptsService.pts?.welcomePage.note||"注意"}}</h1>
+    <div>{{ptsService.pts?.welcomePage.noteIntro||"條列"}}</div>
     <ol>
-        <li *ngIf="!!!isSet">{{app.pts?.welcomePage.notSetting||"尚未設定"}}</li>
-        <li *ngIf="!!!isExist">{{app.pts?.welcomePage.noTemplateSheet||"無樣板表單"}}</li>
+        <li *ngIf="!!!isSet">{{ptsService.pts?.welcomePage.notSetting||"尚未設定"}}</li>
+        <li *ngIf="!!!isExist">{{ptsService.pts?.welcomePage.noTemplateSheet||"無樣板表單"}}</li>
     </ol>
-    <div>{{app.pts?.welcomePage.noteAction||"請只按設定按鈕開始設定"}}</div>
-    <a routerLink="/settings" mat-raised-button color="primary">⚙{{app.pts?.appPage.setup||"設定"}}</a>
+    <div>{{ptsService.pts?.welcomePage.noteAction||"請只按設定按鈕開始設定"}}</div>
+    <a routerLink="/settings" mat-raised-button color="primary">⚙{{ptsService.pts?.appPage.setup||"設定"}}</a>
 </div>
-<p [innerHTML]="(app.pts?.welcomePage.welcomeIntro||'歡迎使用此小幫手').replace('{0}','📋').replace('{1}','😀').replace('{2}','🎎').replace('{3}','https://github.com/ychsue/grade-analyzer-angular')">
+<p [innerHTML]="(ptsService.pts?.welcomePage.welcomeIntro||'歡迎使用此小幫手').replace('{0}','📋').replace('{1}','😀').replace('{2}','🎎').replace('{3}','https://github.com/ychsue/grade-analyzer-angular')">
 </p>
 
-<h3><b>{{app.pts?.welcomePage.setup||"設定"}}</b></h3>
-<p [innerHTML]="(app.pts?.welcomePage.cSetup||'透過它，此程式才知道那些欄位對你有何意義。而且，透過它，也可以輕鬆地幫你產生一份樣板表單，透過此樣板表單就可以產生其他的成績輸入表單了。').replace('{0}',this.gSettings.templateWorksheetName)">
+<h3><b>{{ptsService.pts?.welcomePage.setup||"設定"}}</b></h3>
+<p [innerHTML]="(ptsService.pts?.welcomePage.cSetup||'透過它，此程式才知道那些欄位對你有何意義。而且，透過它，也可以輕鬆地幫你產生一份樣板表單，透過此樣板表單就可以產生其他的成績輸入表單了。').replace('{0}',this.gSettings.templateWorksheetName)">
 </p>
 
-<h3><b>{{app.pts?.welcomePage.generate||"產生"}}</b></h3>
-<p [innerHTML]="(app.pts?.welcomePage.cGenerate||'用來產生給學生家長與給老師參考的表單。').split('{0}').join(gSettings.chartSheetName).replace('{1}',app.pts?.welcomePage.eachCourse)"></p>
+<h3><b>{{ptsService.pts?.welcomePage.generate||"產生"}}</b></h3>
+<p [innerHTML]="(ptsService.pts?.welcomePage.cGenerate||'用來產生給學生家長與給老師參考的表單。').split('{0}').join(gSettings.chartSheetName).replace('{1}',ptsService.pts?.welcomePage.eachCourse)"></p>

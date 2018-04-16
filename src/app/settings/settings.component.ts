@@ -27,14 +27,14 @@ export class SettingsComponent implements OnInit {
   constructor(
     private dataServerService: DataServerService,
     private messageService: MessageService,
-    public app: AppComponent,
-    private ptsService: PageTextsService,
+    private app: AppComponent,
+    public ptsService: PageTextsService,
     private zone:NgZone
   ) { }
   
   refreshSettings() {
-    let stRenewing =(this.app.pts)?this.app.pts.SettingsPage.renewing:"";
-    let stDone =(this.app.pts)?this.app.pts.SettingsPage.done:"";
+    let stRenewing =(this.ptsService.pts)?this.ptsService.pts.SettingsPage.renewing:"";
+    let stDone =(this.ptsService.pts)?this.ptsService.pts.SettingsPage.done:"";
 
     this.app.setOfSpinner = {
       isActivate: true, title: stRenewing||'更新中', message: ''
@@ -50,9 +50,9 @@ export class SettingsComponent implements OnInit {
 }
 
 showDialog0() {
-  let st1stTime =(this.app.pts)?this.app.pts.SettingsPage.firstTime:'';
-  let st1stTimeMsg =(this.app.pts)?this.app.pts.SettingsPage.firstTimeMsg:'';
-  let stUnderstand =(this.app.pts)?this.app.pts.SettingsPage.understand:'';
+  let st1stTime =(this.ptsService.pts)?this.ptsService.pts.SettingsPage.firstTime:'';
+  let st1stTimeMsg =(this.ptsService.pts)?this.ptsService.pts.SettingsPage.firstTimeMsg:'';
+  let stUnderstand =(this.ptsService.pts)?this.ptsService.pts.SettingsPage.understand:'';
   
   const data: dialogData = {
     title: st1stTime||'第一次使用',
@@ -70,15 +70,15 @@ showDialog0() {
 }
 
 showDialog1() {
-  let stUnderstand =(this.app.pts)?this.app.pts.SettingsPage.understand:'';
-  let stNeedTmpTitle =(this.app.pts)?this.app.pts.SettingsPage.needTmpTitle:'';
-  let stNeedTmpMsg =(this.app.pts)?this.app.pts.SettingsPage.needTmpMsg:'';
+  let stUnderstand =(this.ptsService.pts)?this.ptsService.pts.SettingsPage.understand:'';
+  let stNeedTmpTitle =(this.ptsService.pts)?this.ptsService.pts.SettingsPage.needTmpTitle:'';
+  let stNeedTmpMsg =(this.ptsService.pts)?this.ptsService.pts.SettingsPage.needTmpMsg:'';
 
   const data: dialogData = {
     title: stNeedTmpTitle||'請先產生樣板表單',
     message: (stNeedTmpMsg||`所有的成績輸入都以樣板表單為主。請先按按鈕
     <br/>{0}<br/>
-    以自動產生一份表單給你。`).replace('{0}',(this.app.pts)?this.app.pts.SettingsPage.genTmp:"➕產生"),
+    以自動產生一份表單給你。`).replace('{0}',(this.ptsService.pts)?this.ptsService.pts.SettingsPage.genTmp:"➕產生"),
     buttons: [
       {
         text: stUnderstand||'了解了',
@@ -91,10 +91,10 @@ showDialog1() {
 }
 
 async showDialogModify(message: string, isTempExist:boolean, isUnChanged:boolean) {
-  let stNote =(this.app.pts)?this.app.pts.SettingsPage.note:'';
-  let stChange =(this.app.pts)?this.app.pts.SettingsPage.change:'';
-  let stUnchange =(this.app.pts)?this.app.pts.SettingsPage.unchange:'';
-  let stKeepEdit =(this.app.pts)?this.app.pts.SettingsPage.keepEdit:'';
+  let stNote =(this.ptsService.pts)?this.ptsService.pts.SettingsPage.note:'';
+  let stChange =(this.ptsService.pts)?this.ptsService.pts.SettingsPage.change:'';
+  let stUnchange =(this.ptsService.pts)?this.ptsService.pts.SettingsPage.unchange:'';
+  let stKeepEdit =(this.ptsService.pts)?this.ptsService.pts.SettingsPage.keepEdit:'';
 
 
   let asyncResult :Subject<boolean> = new Subject<boolean>();
@@ -149,9 +149,9 @@ onChartNameChanged(term: string) {
 }
 
 async genTempIn(): Promise<void> {
-  let stCreatingSample =(this.app.pts)?this.app.pts.SettingsPage.creatingSample:'';
-  let stWaiting =(this.app.pts)?this.app.pts.SettingsPage.waiting:'';
-  let stRunning =(this.app.pts)?this.app.pts.SettingsPage.running:'';
+  let stCreatingSample =(this.ptsService.pts)?this.ptsService.pts.SettingsPage.creatingSample:'';
+  let stWaiting =(this.ptsService.pts)?this.ptsService.pts.SettingsPage.waiting:'';
+  let stRunning =(this.ptsService.pts)?this.ptsService.pts.SettingsPage.running:'';
 
   this.zone.run(()=>{
     this.app.setOfSpinner = {isActivate: true ,title: stCreatingSample||'創建樣板中', message: stWaiting||'請稍候',value:30};
@@ -206,9 +206,9 @@ async genTempIn(): Promise<void> {
       
       async canDeactivate() {
         let message :string ='';
-        let stNotExisting =(this.app.pts)?this.app.pts.SettingsPage.notExisting:'';
-        let stSettingChanged =(this.app.pts)?this.app.pts.SettingsPage.settingChanged:'';
-        let stWannaChange =(this.app.pts)?this.app.pts.SettingsPage.wannaChange:'';
+        let stNotExisting =(this.ptsService.pts)?this.ptsService.pts.SettingsPage.notExisting:'';
+        let stSettingChanged =(this.ptsService.pts)?this.ptsService.pts.SettingsPage.settingChanged:'';
+        let stWannaChange =(this.ptsService.pts)?this.ptsService.pts.SettingsPage.wannaChange:'';
 
         const isTempExist = await this.dataServerService.checkWorksheetExistance(this.gSettings.templateWorksheetName);
         if(isTempExist===false) message+= (stNotExisting||`工作表${this.gSettings.templateWorksheetName}不存在。<br/>`).replace('{0}',this.gSettings.templateWorksheetName);

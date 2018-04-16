@@ -104,5 +104,20 @@
     "mayNotExistSheet": "表單 <b>{0}</b> <br/>可能不存在",
     "notExistSheet": "{0} 表單不存在",
     "applying2Student": "套用至第{0}學生"
+  },
+  "dataServerService": {
+    "applyOnStudentCol": "完成第{0}學生的第{1}行的套用",
+    "english": "英語",
+    "chinese": "國文",
+    "math": "數學",
+    "science": "自然",
+    "noTmpSheet": "表單{0}不存在，請到<b>設定</b>先創造它出來吧。",
+    "start": "開始",
+    "timesID": "成績表單➡\nID⬇",
+    "compare": "比較: {0}",
+    "output2IDDone": "輸出ID={0} 完成",
+    "noSheet": "{0} 不存在，請先產生它",
+    "completeIthStu": "完成第{0}位成績",
+    "applyingOnRow": "套用第{0}行中"
   }
 }

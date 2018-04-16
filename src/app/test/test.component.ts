@@ -170,7 +170,7 @@ showWindowConfirm(message?: string){
 }
 
 changeAppTitle(){
-  this.app.pts.appPage.title = Date();
+  this.ptsService.pts.appPage.title = Date();
 }
 
 showSpinner(){
@@ -300,7 +300,7 @@ updatePageTexts(isoCode:string){
 }
 
 constructor(public messageService: MessageService, private dataServerService:DataServerService,
-  public app:AppComponent) { }
+  public app:AppComponent, public ptsService: PageTextsService) { }
   
   ngOnInit() {
     this.messageService.add("TestComponent.ngOnInit");

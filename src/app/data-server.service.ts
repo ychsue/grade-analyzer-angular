@@ -25,7 +25,8 @@ export class DataServerService {
         await ctx.sync();
       }  
       this.zone.run(()=>{
-        operator.next([(iW+1)*100/nWidth,`完成第${ithStudent+1}學生的第${iW+1}列的套用`]);
+        operator.next([(iW+1)*100/nWidth,
+          ((this.ptsService.pts)?this.ptsService.pts.dataServerService.applyOnStudentCol:`完成第{0}學生的第{1}行的套用`).replace('{0}',(ithStudent+1).toString()).replace('{1}',(iW+1).toString())]);
       });
     }
   }
@@ -229,10 +230,10 @@ export class DataServerService {
           table.getHeaderRowRange()
           .values =[[gSettings.stID,
             gSettings.stName,
-            '英語',
-            '國文',
-            '數學',
-            '自然',
+            (this.ptsService.pts)?this.ptsService.pts.dataServerService.english:'英語',
+            (this.ptsService.pts)?this.ptsService.pts.dataServerService.chinese:'國文',
+            (this.ptsService.pts)?this.ptsService.pts.dataServerService.math:'數學',
+            (this.ptsService.pts)?this.ptsService.pts.dataServerService.science:'自然',
             gSettings.stAvg,
             gSettings.stTotal,
             gSettings.stScore]];
@@ -282,7 +283,7 @@ export class DataServerService {
         async ctx =>{
           // * [2018-02-07 19:18] Check whether the worksheet 'sName' does exist.
           const isSourceExist = await this.checkWorksheetExistance(sName);
-          if(isSourceExist===false) return `表單${sName}不存在，請到<b>設定</b>先創造它出來吧。`;
+          if(isSourceExist===false) return ((this.ptsService.pts)?this.ptsService.pts.dataServerService.noTmpSheet:`表單{0}不存在，請到<b>設定</b>先創造它出來吧。`).replace('{0}',sName);
           // * [2018-02-07 19:20] add the destinate worksheet
           dName = (dName)?dName:(sName+'_copy');
           let dWorksheet = ctx.workbook.worksheets.add(dName);
@@ -477,7 +478,8 @@ export class DataServerService {
   
   async outputListsIntoWorksheet(sheetName:string,grade:Igrade,infos:ImainCellsInfo[],tInfo:ImainCellsInfo,pInfo:ImainCellsInfo, process?:Subject<[number,string]>):Promise<boolean>{
     return await Excel.run(async ctx =>{
-      if(process) await process.next([0,"開始"]);
+      if(process) await process.next([0,
+        (this.ptsService.pts)?this.ptsService.pts.dataServerService.start:"開始"]);
       // * [2018-02-23 12:03] Open the worksheet which name is ${sheetName}
       let outputSheet = await this.openASheet(ctx, sheetName);
       const tableSheetNameForChart = `${sheetName}_${grade.name}`;
@@ -499,7 +501,7 @@ export class DataServerService {
       this.globalSettings.nH=eachInfo.nTotalRows;
       this.updateSettingsToServer();
       // * [2018-02-27 11:47] Output table head into tableSheetForChart
-      let titles:string[] = [`成績表單➡\nID⬇`];
+      let titles:string[] = [(this.ptsService.pts)?this.ptsService.pts.dataServerService.timesID:`成績表單➡\nID⬇`];
       tInfos.reduce((pre,cur)=>{pre.push(cur.thisSheetName); return pre;},titles);
       tableSheetForChart.getRange(ExcelHelperModule.cellsToAddress([0,0],[0,tInfos.length])).values=[titles];
       // * [2018-02-27 12:12] Get all columns for the grade you want.
@@ -559,7 +561,7 @@ export class DataServerService {
           [this.globalSettings.stCAvg],
           [this.globalSettings.stCHighest],
           [this.globalSettings.stCLowest],
-          [`比較：${pInfo.thisSheetName}`],
+          [((this.ptsService.pts)?this.ptsService.pts.dataServerService.compare:`比較：{0}`).replace('{0}',pInfo.thisSheetName)],
           [this.globalSettings.stSpecial]
         ];
         currentRow = topTableRow; //Initialize it
@@ -659,7 +661,8 @@ export class DataServerService {
         bufRange = outputSheet.getRange(ExcelHelperModule.cellsToAddress([iSpec,2],[iSpec,eachInfo.nWidth-1]));
         bufRange.format.borders.getItem(Excel.BorderIndex.insideVertical).style = Excel.BorderLineStyle.none;
 
-        if(process) this.zone.run(()=>{ process.next([(ithStudent+1)*100/tInfo.IdArray.length,`輸出ID=${id} 完成`]);});
+        if(process) this.zone.run(()=>{ process.next([(ithStudent+1)*100/tInfo.IdArray.length,
+          ((this.ptsService.pts)?this.ptsService.pts.dataServerService.output2IDDone:`輸出ID={0} 完成`).replace('{0}',id)]);});
 
         ithStudent++;
       }
@@ -688,7 +691,7 @@ export class DataServerService {
       if(sheet){
         sheet.load('name');
         await ctx.sync();
-        if(!sheet.name) return `${sheetName} 不存在，請先產生它`;
+        if(!sheet.name) return ((this.ptsService.pts)?this.ptsService.pts.dataServerService.noSheet:`{0} 不存在，請先產生它`).replace('{0}',sheetName);
       }
       let bufRange = sheet.getUsedRange();
       bufRange.load('rowCount, columnCount');
@@ -699,7 +702,8 @@ export class DataServerService {
       for (let i0 =1; i0 < studentNum; i0++) { 
           await this.copyFormat(nW,nH,i0,sheet,ctx,operator);
           this.zone.run(
-          ()=>{operator.next([(i0+1)*100/studentNum,`完成第${i0+1}位成績`]);});
+          ()=>{operator.next([(i0+1)*100/studentNum,
+            ((this.ptsService.pts)?this.ptsService.pts.dataServerService.completeIthStu:`完成第{0}位成績`).replace('{0}',(i0+1).toString())]);});
       }
       return "";
     }).catch(async err =>{
@@ -736,7 +740,8 @@ export class DataServerService {
       // * [2018-03-01 10:50] Scan for all rows
       for (let iRow = 0; iRow < nRows; iRow++) {
         this.zone.run(()=>{
-          if(operator) operator.next([100*(iRow+1)/nRows,`套用第 ${iRow+1} Row中`]);
+          if(operator) operator.next([100*(iRow+1)/nRows,
+            ((this.ptsService.pts)?this.ptsService.pts.dataServerService.applyingOnRow:`套用第{0}行中`).replace('{0}',(iRow+1).toString())]);
         });
         let oRow = sheet.getCell(iRow,iRow);
         oRow.load(`format/rowHeight`);

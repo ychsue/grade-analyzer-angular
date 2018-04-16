@@ -1,3 +1,5 @@
+* [2018-4-16 Mon] All the texts including the one in ~data-server.service~ are changed.
+* [2018-4-16 Mon] Now, the pts (pageTexts) are 100% gotten from PageTextsService
 * [2018-4-16 Mon] PageTexts for gen-worksheet are done
 
 * [2018-4-13 Fri] PageTexts for Settings, both html texts and default fields' value are done.

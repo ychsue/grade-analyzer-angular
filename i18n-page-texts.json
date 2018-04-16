@@ -86,8 +86,8 @@
             "visualize": "視覺化",
             "sen4SpecialCell": "特殊欄位文字",
             "useIt": "套用此文字",
-            "tutorial": "使用以下的按鈕前，請先對表單<div class='chartSheetName'>{0}</div>裡的第一位學生的表格進行設定，如寬、高、字體、顏色等，但<br/><b>請不要刪減任何欄或列</b>",
-            "justHeight": "僅套用列高",
+            "tutorial": "使用以下的按鈕前，請先對表單<div class='chartSheetName'>{0}</div>裡的第一位學生的表格進行設定，如寬、高、字體、顏色等，但<br/><b>請不要刪減任何欄或行</b>",
+            "justHeight": "僅套用行高",
             "forAll": "套用全部(很慢)",
             "visNote": "注意：格線其實也可套用，不過，在畫自己想要的格線前，請先將預設的所有格線洗掉後再重新開始畫格線。<br/>怎麼一次全洗掉？很簡單。只要<b>全選(Ctrl-A)</b>整個表格，然後選<b>常用=>無框線</b>即可。",
 
@@ -105,10 +105,25 @@
             "applyingFormat": "套用格式中",
             "applying": "套用中",
             "done": "完成",
-            "applyingHeight": "套用列高中",
+            "applyingHeight": "套用行高中",
             "mayNotExistSheet": "表單 <b>{0}</b> <br/>可能不存在",
             "notExistSheet": "{0} 表單不存在",
             "applying2Student": "套用至第{0}學生"
+        },
+        "dataServerService": {
+            "applyOnStudentCol":"完成第{0}學生的第{1}行的套用",
+            "english": "英語",
+            "chinese": "國文",
+            "math": "數學",
+            "science": "自然",
+            "noTmpSheet": "表單{0}不存在，請到<b>設定</b>先創造它出來吧。",
+            "start": "開始",
+            "timesID": "成績表單➡\nID⬇",
+            "compare": "比較: {0}",
+            "output2IDDone": "輸出ID={0} 完成",
+            "noSheet": "{0} 不存在，請先產生它",
+            "completeIthStu": "完成第{0}位成績",
+            "applyingOnRow": "套用第{0}行中"
         }
     },
     "defaultLang": "zh-tw",
