@@ -2,7 +2,7 @@
 
 import { Component, NgZone } from '@angular/core';
 import { MatDialog,MatDialogModule } from '@angular/material';
-import { DataServerService } from './data-server.service';
+import { DataServerService, ITypeOfDataServer } from './data-server.service';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { MessageService } from './message.service';
 import { GlobalSettings } from './global-settings';
@@ -17,15 +17,23 @@ import { LocalStorageService } from './local-storage.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit{
+  
+  typeOfDataServer: ITypeOfDataServer;
+  
   ngOnInit(): void {
+    //* [2018-04-17 21:26] Get the dataServerService's type
+    this.typeOfDataServer = this.dataServerService.typeOfDataServer;
+
     this.gSettings = this.dataServerService.globalSettings;
-    if(this.dataServerService.isSet()){
+    if(this.dataServerService.isSupport && this.dataServerService.isSet()){
       let times = this.dataServerService.getUsedTimes()+1;
       this.dataServerService.setUsedTimes(times)
       .then(()=>{
         if(this.gSettings.isDebugMode) this.messageService.add("AppComponent.ngOnInit: usedTimes="+times);
       });
     }
+    if(this.gSettings.isDebugMode) this.messageService.add(`typeOfDataServer=${JSON.stringify(this.dataServerService.typeOfDataServer)}, isSupport=${this.dataServerService.isSupport}`);
+
     //* [2018-04-09 14:08] Initialize the pageTexts
     let self = this;
     // this.pts = this.ptsService.pts; //Might be null.
@@ -87,7 +95,7 @@ export class AppComponent implements OnInit{
   }
   
   constructor(public dialog:MatDialog, 
-    private dataServerService: DataServerService,
+    public dataServerService: DataServerService,
     private messageService: MessageService,
     public ptsService: PageTextsService,
     private lsService: LocalStorageService,

@@ -1,5 +1,17 @@
 .noteMain{
+    animation: blink 1s ease 0 infinite both alternate;
     border: solid 12px red;
     border-radius: 12px;
     padding: 12px;
+}
+
+@keyframes blink{
+    from {
+        border-color: yellow;
+        background-color: goldenrod;
+    }
+    to {
+        border-color: red;
+        background-color: yellow;
+    }
 }

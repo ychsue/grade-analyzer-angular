@@ -25,6 +25,8 @@ interface IWelcomePage {
     generate: string;
     cGenerate: string;
     eachCourse: string;
+    notSupport: string;
+    lowerExcelApi: string;
 }
 interface ITestPage {
     test: string;

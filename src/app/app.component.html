@@ -6,8 +6,10 @@
     <mat-menu #menu="matMenu">
         <a mat-menu-item routerLink="/test" *ngIf='this.gSettings.isDebugMode'>Test</a>
         <a mat-menu-item routerLink="/welcome">🎈{{ptsService.pts?.appPage.welcome||"歡迎"}}</a>
-        <a mat-menu-item routerLink="/generate">📰{{ptsService.pts?.appPage.generate||"產生"}}</a>
-        <a mat-menu-item routerLink="/settings">⚙{{ptsService.pts?.appPage.setup||"設定"}}</a>
+        <a mat-menu-item routerLink="/generate"
+        [class.notActive]="!!!dataServerService.isSupport">📰{{ptsService.pts?.appPage.generate||"產生"}}</a>
+        <a mat-menu-item routerLink="/settings"
+        [class.notActive]="!!!dataServerService.isSupport">⚙{{ptsService.pts?.appPage.setup||"設定"}}</a>
     </mat-menu>
     <span>{{ptsService.pts?.appPage.title||"班級成績管理小幫手"}}</span>
 

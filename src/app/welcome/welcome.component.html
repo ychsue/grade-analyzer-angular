@@ -1,12 +1,19 @@
-<div class="noteMain" *ngIf="(isSet && isExist)===false">
+<div class="noteMain" *ngIf="(dataServerService.isSupport && isSet && isExist)===false">
     <h1>{{ptsService.pts?.welcomePage.note||"注意"}}</h1>
-    <div>{{ptsService.pts?.welcomePage.noteIntro||"條列"}}</div>
-    <ol>
-        <li *ngIf="!!!isSet">{{ptsService.pts?.welcomePage.notSetting||"尚未設定"}}</li>
-        <li *ngIf="!!!isExist">{{ptsService.pts?.welcomePage.noTemplateSheet||"無樣板表單"}}</li>
-    </ol>
-    <div>{{ptsService.pts?.welcomePage.noteAction||"請只按設定按鈕開始設定"}}</div>
-    <a routerLink="/settings" mat-raised-button color="primary">⚙{{ptsService.pts?.appPage.setup||"設定"}}</a>
+    <div *ngIf="dataServerService.isSupport">
+        <div>{{ptsService.pts?.welcomePage.noteIntro||"條列"}}</div>
+        <ol>
+            <li *ngIf="!!!isSet">{{ptsService.pts?.welcomePage.notSetting||"尚未設定"}}</li>
+            <li *ngIf="!!!isExist">{{ptsService.pts?.welcomePage.noTemplateSheet||"無樣板表單"}}</li>
+        </ol>
+        <div>{{ptsService.pts?.welcomePage.noteAction||"請只按設定按鈕開始設定"}}</div>
+        <a routerLink="/settings" mat-raised-button color="primary">⚙{{ptsService.pts?.appPage.setup||"設定"}}</a>    
+    </div>
+    <div *ngIf="!!!dataServerService.isSupport">
+        <div [innerHTML]="ptsService.pts?.welcomePage.notSupport||'此APP只能在Excel 2016以上的版本下運作，抱歉，因此你目前只能看到此頁面。'"></div>
+        <div  *ngIf="dataServerService.typeOfDataServer.type===dataServerService.enumOfType.excel" 
+             [innerHTML]="ptsService.pts?.welcomePage.lowerExcelApi||'由於你使用中的Excel的ExcelApi未達此APP最低要求版本，所以無法使用此APP。若要使用，更新你的Excel可能是個方法。'"></div>
+    </div>
 </div>
 <p [innerHTML]="(ptsService.pts?.welcomePage.welcomeIntro||'歡迎使用此小幫手').replace('{0}','📋').replace('{1}','😀').replace('{2}','🎎').replace('{3}','https://github.com/ychsue/grade-analyzer-angular')">
 </p>
@@ -16,4 +23,4 @@
 </p>
 
 <h3><b>{{ptsService.pts?.welcomePage.generate||"產生"}}</b></h3>
-<p [innerHTML]="(ptsService.pts?.welcomePage.cGenerate||'用來產生給學生家長與給老師參考的表單。').split('{0}').join(gSettings.chartSheetName).replace('{1}',ptsService.pts?.welcomePage.eachCourse)"></p>
+<p [innerHTML]="(ptsService.pts?.welcomePage.cGenerate||'用來產生給學生家長與給老師參考的表單。').split('{0}').join((isSet||!!!ptsService.pts)?gSettings.chartSheetName:ptsService.pts.gSettings.chartSheetName).replace('{1}',ptsService.pts?.welcomePage.eachCourse)"></p>

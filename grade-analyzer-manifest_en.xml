@@ -16,9 +16,9 @@
   <ProviderName>Young-Chung Hsue</ProviderName>
   <DefaultLocale>zh-TW</DefaultLocale>
   <!-- The display name of your add-in. Used on the store and various places of the Office UI such as the add-ins dialog. -->
-  <DisplayName DefaultValue="班級成績管理小幫手" />
+  <DisplayName DefaultValue="Class Grade Analyzer" />
   <!-- <Description DefaultValue="[Workbook Add-in description]"/> -->
-  <Description DefaultValue="每次在輸入班級的成績後，透過這個小幫手，可以產生給每位家長的子圖表，也會提供老師一個所有學生長期學習趨勢的表單。"/>
+  <Description DefaultValue="Throgh this helper, it will generate a chart for each stduent's parent and a long-term learning trend of the students for the instructor once you provide it the grades."/>
 
   <!-- Icon for your add-in. Used on installation screens and the add-ins dialog. -->
   <IconUrl DefaultValue="https://classGradeAnalyzer.azurewebsites.net/assets/icon-32.png" />
@@ -137,14 +137,14 @@
       </bt:Urls>
       <!-- ShortStrings max characters==125. -->
       <bt:ShortStrings>
-        <bt:String id="Contoso.TaskpaneButton.Label" DefaultValue="顯示" />
-        <bt:String id="Contoso.Group1Label" DefaultValue="班級成績管理小幫手" />
-        <bt:String id="Contoso.GetStarted.Title" DefaultValue="歡迎使用班級成績管理小幫手" />
+        <bt:String id="Contoso.TaskpaneButton.Label" DefaultValue="Show" />
+        <bt:String id="Contoso.Group1Label" DefaultValue="Class Grade Analyzer" />
+        <bt:String id="Contoso.GetStarted.Title" DefaultValue="Welcome to use this class grade analyzer" />
       </bt:ShortStrings>
       <!-- LongStrings max characters==250. -->
       <bt:LongStrings>
-        <bt:String id="Contoso.TaskpaneButton.Tooltip" DefaultValue="按此鈕以開啟小幫手工作窗格" />
-        <bt:String id="Contoso.GetStarted.Description" DefaultValue="此插件已經載入完畢，你可以透過按'顯示'鈕來開啟小幫手窗格然後開始使用它。" />
+        <bt:String id="Contoso.TaskpaneButton.Tooltip" DefaultValue="Click this button to show up the taskpane for this helper." />
+        <bt:String id="Contoso.GetStarted.Description" DefaultValue="This addin has been loaded, you can click the button 'Show' to start to use it." />
       </bt:LongStrings>
     </Resources>
   </VersionOverrides>

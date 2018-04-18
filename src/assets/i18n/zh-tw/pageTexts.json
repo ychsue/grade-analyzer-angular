@@ -10,7 +10,9 @@
     "noteIntro": "你的設定不完全，問題條列如下：",
     "notSetting": "你尚未完成任何設定",
     "noTemplateSheet": "你並沒有提供一個樣板表單",
-    "noteAction": "在讀完下列說明後，請先按以下按鈕以進入設定頁面去做必要的設定，謝謝。"
+    "noteAction": "在讀完下列說明後，請先按以下按鈕以進入設定頁面去做必要的設定，謝謝。",
+    "notSupport": "此APP只能在<b>Excel 2016</b>以上的版本下運作，抱歉，因此你目前只能看到此頁面。",
+    "lowerExcelApi": "由於你使用中的Excel的<b>ExcelApi</b>未達此APP最低要求版本，所以無法使用此APP。若要使用，<u>更新你的Excel<u>可能是個方法。"
   },
   "TestPage": {
     "test": "測試"

@@ -11,6 +11,55 @@ import { PageTextsService } from './page-texts.service';
 
 @Injectable()
 export class DataServerService {
+
+  enumOfType = DataServerTypeEnum;
+
+  // #region   typeOfDataServer
+  private _typeOfServer: ITypeOfDataServer;
+  public get typeOfDataServer(): ITypeOfDataServer {
+    if(!!!this._typeOfServer){
+      if (Office['context'] === undefined || Office.context['document'] === undefined){
+        //* ************************************ TODO **********************************
+        this._typeOfServer = {type:DataServerTypeEnum.notSupport};
+      } else {
+        let version =1.1;
+        let versions = [1.9,1.8,1.7,1.6,1.5,1.4,1.3,1.2,1.1];
+        while (versions.length > 0) {
+          let nextVersion = versions.pop();
+          if(Office.context.requirements.isSetSupported("ExcelApi",nextVersion)) {
+            version = nextVersion;
+          } else {
+            break;
+          }
+        }
+        this._typeOfServer = {type:DataServerTypeEnum.excel, version: version};
+      }
+    }
+    return this._typeOfServer;
+  }
+  public set typeOfDataServer(v : ITypeOfDataServer) {
+    this._typeOfServer = v;
+  }
+  // #endregion  typeOfDataServer
+
+  // #region   isSupport
+  private _isSupport: boolean =undefined;
+  
+  public get isSupport() : boolean {
+    if(this._isSupport===undefined){
+      let typeOfServer = this.typeOfDataServer;
+      //* [2018-04-17 22:13] The Logic about whether it is supported
+      // ******************************************** TODO *********************************************
+      this._isSupport = typeOfServer.type===DataServerTypeEnum.excel && typeOfServer.version >=1.6; 
+    }
+    return this._isSupport;
+  }
+  
+  public set isSupport(v : boolean) {
+    this._isSupport = v;
+  }
+  // #endregion notSupport
+
   async copyFormat(nWidth:number,nHeight:number,ithStudent:number,sheet:Excel.Worksheet,ctx: Excel.RequestContext,operator?:Subject<[number,string]>): Promise<void> {
     for (let iW = 0; iW < nWidth;  iW++) {
       for (let iH = 0; iH < nHeight; iH++) {
@@ -671,9 +720,18 @@ export class DataServerService {
       for (let i0:number=0;i0<tInfos.length;i0++) {
         let range = tableSheetForChart.getRange(ExcelHelperModule.cellsToAddress([1,i0+1],[ithStudent+1,i0+1]));
         let cFormat= range.conditionalFormats.add(Excel.ConditionalFormatType.colorScale);
-        // let criteria = cFormat.colorScale.criteria;
+        cFormat.load("colorScale, colorScale.criteria");
+        await ctx.sync();
+        let criteria = cFormat.colorScale.criteria;
+        cFormat.colorScale.set({criteria: {
+          maximum:{type:"HighestValue", color:"#FFFF00"}
+          ,minimum: {type: "LowestValue", color: "#FF0000"}
+          // ,midpoint: {type: "Percentile", color: "#888800"}
+        }});
+        await ctx.sync();
         // criteria.maximum.color="#00FF00";
         // criteria.minimum.color="#FF0000";
+        if(this.globalSettings.isDebugMode) {this.messageService.add(`maximum=${criteria.maximum.color}&minimum=${criteria.minimum.color}`); }
       }
 
       return true;
@@ -791,4 +849,14 @@ export interface IYearSemTimes{
   year: string;
   sem: string;
   times: string;
+}
+
+export interface ITypeOfDataServer{
+  type: DataServerTypeEnum, 
+  version?: number
+}
+
+export enum DataServerTypeEnum{
+  notSupport,
+  excel
 }

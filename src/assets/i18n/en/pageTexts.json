@@ -10,7 +10,9 @@
     "noteIntro": "Your settings are incomplete and the problems are listed as follows:",
     "notSetting": "You haven't finished any settings yet",
     "noTemplateSheet": "You did not provide a template worksheet",
-    "noteAction": "After reading the following instructions, please click the following button to enter the Settings page to make the necessary settings. Thank you."
+    "noteAction": "After reading the following instructions, please click the following button to enter the Settings page to make the necessary settings. Thank you.",
+    "notSupport": "This app can only be operated under <b>Excel 2016</b>. Sorry, so you can currently only see this page.",
+    "lowerExcelApi": "Since you are using Excel's <b>ExcelApi</b> that does not reach the minimum required version of this app, you cannot use this app. To use, <u>Updating your Excel<U> may be a way."
   },
   "TestPage": {
     "test": "test"

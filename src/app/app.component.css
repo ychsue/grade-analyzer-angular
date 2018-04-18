@@ -12,3 +12,9 @@ app-dialog{
     right: 16px;
     top: 16px;
 }
+
+.notActive{
+    cursor: default;
+    pointer-events: none;
+    opacity: 0.3;
+}

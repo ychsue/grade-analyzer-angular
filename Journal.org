@@ -1,3 +1,19 @@
+* [2018-4-18 Wed] OK, almost done. Next, the icons.
+* [2018-4-16 Mon] Sigh, 2013 ....
+As described in [[https://stackoverflow.com/questions/39475774/office-addin-fails-to-load-in-excel-2013-when-requirement-set-for-excel-api-1-2][this StackOverflow's Q&A]]
+, requirement set for ~ExcelApi~ is no use for Excel 2013, I might need to check them inside the code as described [[https://docs.microsoft.com/en-us/office/dev/add-ins/develop/specify-office-hosts-and-api-requirements][here]]
+** Lists of methods whose version higher than 1.1
+- v1.2
+  + merge
+- v1.4
+  + getUsedRangeOrNullObject
+  + getItemOrNullObject
+  + table.rows.add (multiple lines)
+- v1.6
+  + conditionalFormats
+  + ConditionalCellValueOperator
+  + ConditionalFormatType
+  
 * [2018-4-16 Mon] All the texts including the one in ~data-server.service~ are changed.
 * [2018-4-16 Mon] Now, the pts (pageTexts) are 100% gotten from PageTextsService
 * [2018-4-16 Mon] PageTexts for gen-worksheet are done
