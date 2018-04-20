@@ -1,3 +1,4 @@
+* [2018-4-20 Fri] The icons are changed. Let me test it.
 * [2018-4-18 Wed] OK, almost done. Next, the icons.
 * [2018-4-16 Mon] Sigh, 2013 ....
 As described in [[https://stackoverflow.com/questions/39475774/office-addin-fails-to-load-in-excel-2013-when-requirement-set-for-excel-api-1-2][this StackOverflow's Q&A]]
