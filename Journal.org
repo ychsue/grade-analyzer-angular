@@ -1,3 +1,9 @@
+* [2018-4-23 Mon] Submit a video to Youtube
+Its address is [https://youtu.be/4j8bWnO18ls] and it is made by Blender's ~Video editing~ mode.
+By the way, before I record the speech, I write the subtitles at first and I cut my voice record into pieces to fit the video. 
+* [2018-4-20 Fri] Add in the Web.config for Json file
+As described in [[https://blogs.msdn.microsoft.com/africaapps/2013/06/07/how-to-serve-static-json-files-from-a-windows-azure-website/][this article]], the json file cannot be read in Azure website. 
+You need to provide it a ~Web.config~ file to let the server allow the user to read the Json file.
 * [2018-4-20 Fri] The icons are changed. Let me test it.
 * [2018-4-18 Wed] OK, almost done. Next, the icons.
 * [2018-4-16 Mon] Sigh, 2013 ....

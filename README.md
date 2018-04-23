@@ -6,9 +6,13 @@ It means that it only functions correctly in Excel.
 
 Therefore, please load it from Excel Add-in and it will show up as a Task Pane.
 
+Besides, you can watch its demo in https://youtu.be/4j8bWnO18ls.
+
 這個程式是一個Angular 單網頁應用程式，你可以連到 https://classgradeanalyzer.azurewebsites.net 來看一下它大概在做甚麼。
 不過，由於這個程式其實是與Excel搭配的，也就是它必須要由Excel的 *我的增益集* 來叫用，而且以工作窗格的形式出現在Excel內。
 所以，在該網頁上試用時，部分不工作的按鈕是因為它需要叫用Excel。所以，請在Excel下試用才可以讓它完全運作。
+
+此外，你可以在 https://youtu.be/4j8bWnO18ls 看到它的演示。
 # Installation 安裝
 If you want to run it on your local machine, you need to install
 

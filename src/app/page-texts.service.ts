@@ -50,6 +50,9 @@ export class PageTextsService {
       self.langCode = isoCode;
       self.pts = obj as IPageTexts;
       self.updateEnd.next(self.pts);
+    }, err =>{
+      console.log(`error: ${err}`);
+      self.updateEnd.next(self.pts);
     });
 
     return httpGet;
